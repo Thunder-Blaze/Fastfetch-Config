@@ -8,7 +8,7 @@ else
     echo "Backing up existing Fastfetch configuration files..."
     a=$(date +%Y%m%d_%H%M%S)
     mkdir -p "$FASTFETCH_DIR/backup_$a"
-    cp -r "$FASTFETCH_DIR/*" "$FASTFETCH_DIR/backup_$a/"
+    cp -r "$FASTFETCH_DIR/*" "${FASTFETCH_DIR}_backup_${a}/"
     echo "Backup completed."
 fi
 
@@ -18,4 +18,4 @@ cp -r ./fastfetch/* "$FASTFETCH_DIR/"
 echo "Fastfetch configuration files copied successfully."
 echo "Initializing Fastfetch Script..."
 
-exec "$FASTFETCH_DIR/fastfetch-scripts.sh --setup"
+exec "$FASTFETCH_DIR/fastfetch-scripts.sh" --setup
