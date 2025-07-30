@@ -1,5 +1,7 @@
+#!/bin/bash
+
 FASTFETCH_DIR="/home/$USER/.config/fastfetch"
-echo "$FASTFETCH_DIR"
+
 if ! [[ -d "$FASTFETCH_DIR" ]]; then
     echo "Creating Fastfetch directory..."
     mkdir -p "$FASTFETCH_DIR"
@@ -18,4 +20,9 @@ cp -r ./fastfetch/* "$FASTFETCH_DIR/"
 echo "Fastfetch configuration files copied successfully."
 echo "Initializing Fastfetch Script..."
 
-exec "$FASTFETCH_DIR/fastfetch-scripts.sh" --setup
+if [[ -x "$FASTFETCH_DIR/fastfetch-scripts.sh" ]]; then
+    "$FASTFETCH_DIR/fastfetch-scripts.sh" --setup
+else
+    echo "Error: fastfetch-scripts.sh not found or not executable."
+    exit 1
+fi

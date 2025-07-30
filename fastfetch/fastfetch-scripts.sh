@@ -67,7 +67,8 @@ Platforms and Subparams:
     followers     → Followers
     following     → Following
     prs           → Pull requests authored
-    stars         → Starred repositories
+    stars         → User repository stars
+    forks         → User repository forks
 
   anilist
     anime_count   → Anime watched
