@@ -2,7 +2,7 @@
 
 Custom configuration and statistics script for [Fastfetch](https://github.com/fastfetch-cli/fastfetch), designed to display personalized system and online profile stats in a clean and minimal way.
 
-![Fastfetch Preview](https://raw.githubusercontent.com/Thunder-Blaze/Fastfetch-Config/main/assets/Preview1.png)
+<img src="assets/Preview1.webp" width="100%" alt="Fastfetch Preview"/>
 
 ---
 
@@ -95,7 +95,7 @@ chmod +x ~/.config/fastfetch/fastfetch-wrapper.sh
 
 ## ⚙️ Configuration
 
-### `~/.fastfetch_scripts.conf`
+### `~/.config/fastfetch/fastfetch_scripts.conf`
 
 You can create a config file to store your usernames:
 
@@ -116,10 +116,10 @@ AniList=ThunderBlaze
 ## 📸 Screenshots
 
 <p align="center">
-  <img src=".github/preview.png" width="100%" alt="Fastfetch Preview 1"/>
+  <img src="assets/Preview1.webp" width="100%" alt="Fastfetch Preview 1"/>
 </p>
 <p align="center">
-  <img src=".github/preview.png" width="100%" alt="Fastfetch Preview 2"/>
+  <img src="assets/Preview2.webp" width="100%" alt="Fastfetch Preview 2"/>
 </p>
 
 ---
