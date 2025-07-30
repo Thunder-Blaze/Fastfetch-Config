@@ -1,4 +1,5 @@
 FASTFETCH_DIR="/home/$USER/.config/fastfetch"
+echo "$FASTFETCH_DIR"
 if ! [[ -d "$FASTFETCH_DIR" ]]; then
     echo "Creating Fastfetch directory..."
     mkdir -p "$FASTFETCH_DIR"
@@ -7,7 +8,7 @@ else
     echo "Backing up existing Fastfetch configuration files..."
     a=$(date +%Y%m%d_%H%M%S)
     mkdir -p "$FASTFETCH_DIR/backup_$a"
-    cp -r "$FASTFETCH_DIR"/* "$FASTFETCH_DIR/backup_$a/"
+    cp -r "$FASTFETCH_DIR/*" "$FASTFETCH_DIR/backup_$a/"
     echo "Backup completed."
 fi
 
