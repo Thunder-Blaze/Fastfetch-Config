@@ -2,7 +2,7 @@
 
 Custom configuration and statistics script for [Fastfetch](https://github.com/fastfetch-cli/fastfetch), designed to display personalized system and online profile stats in a clean and minimal way.
 
-<img src="assets/Preview1.webp" width="100%" alt="Fastfetch Preview"/>
+<img src="assets/Preview.webp" width="100%" alt="Fastfetch Preview"/>
 
 ---
 
