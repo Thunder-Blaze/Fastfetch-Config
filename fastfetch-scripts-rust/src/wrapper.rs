@@ -1,84 +1,123 @@
-use crate::fetchers::{anilist, codechef, codeforces, github, simkl, myanimelist, leetcode};
-use anyhow::{anyhow, Ok, Result};
+use crate::fetchers::{anilist, codechef, codeforces, github, simkl, myanimelist, leetcode, instagram};
+use anyhow::{anyhow, Result};
+use std::result::Result::Ok;
 
 pub fn run_wrapper(platform: &str) -> Result<String> {
     match platform {
         "codeforces" => {
-            let rating = codeforces::fetch("rating")?;
-            let max = codeforces::fetch("maxrating")?;
-            Ok(format!("{rating} \u{001b}[0;36m\u{001b}[0m {max}"))
+            if let (Ok(rating), Ok(max)) = (
+                codeforces::fetch("rating"),
+                codeforces::fetch("maxrating"),
+            ) {
+                Ok(format!("{rating} \u{001b}[0;36m\u{001b}[0m {max}"))
+            } else {
+                Ok(String::new())
+            }
         }
 
         "codechef" => {
-            let rating = codechef::fetch("rating")?;
-            let max = codechef::fetch("maxrating")?;
-            Ok(format!("{rating} \u{001b}[0;36m\u{001b}[0m {max}"))
+            if let (Ok(rating), Ok(max)) = (
+                codechef::fetch("rating"),
+                codechef::fetch("maxrating"),
+            ) {
+                Ok(format!("{rating} \u{001b}[0;36m\u{001b}[0m {max}"))
+            } else {
+                Ok(String::new())
+            }
         }
 
         "github" => {
-            let repos = github::fetch("repos")?;
-            let prs = github::fetch("prs")?;
-            let stars = github::fetch("stars")?;
-            let followers = github::fetch("followers")?;
-            Ok(format!(
-                "\u{001b}[0;36m\u{001b}[0m {repos} \
+            if let (Ok(repos), Ok(prs), Ok(stars), Ok(followers)) = (
+                github::fetch("repos"),
+                github::fetch("prs"),
+                github::fetch("stars"),
+                github::fetch("followers"),
+            ) {
+                Ok(format!(
+                    "\u{001b}[0;36m\u{001b}[0m {repos} \
 \u{001b}[0;36m\u{001b}[0m {prs} \
 \u{001b}[0;36m\u{001b}[0m {stars} \
 \u{001b}[0;36m\u{001b}[0m {followers}"
-            ))
+                ))
+            } else {
+                Ok(String::new())
+            }
         }
 
         "anilist" => {
-            let anime = anilist::fetch("anime_count")?;
-            let manga = anilist::fetch("manga_count")?;
-            let episodes = anilist::fetch("episodes")?;
-            let chapters = anilist::fetch("chapters")?;
-            Ok(format!(
-                "\u{001b}[0;36m\u{001b}[0m {anime} \
+            if let (Ok(anime), Ok(manga), Ok(episodes), Ok(chapters)) = (
+                anilist::fetch("anime_count"),
+                anilist::fetch("manga_count"),
+                anilist::fetch("episodes"),
+                anilist::fetch("chapters"),
+            ) {
+                Ok(format!(
+                    "\u{001b}[0;36m\u{001b}[0m  {anime} \
 \u{001b}[0;36m\u{001b}[0m {episodes} \
 \u{001b}[0;36m󰂺\u{001b}[0m {manga} \
 \u{001b}[0;36m\u{001b}[0m {chapters}"
-            ))
+                ))
+            } else {
+                Ok(String::new())
+            }
         }
 
         "simkl" => {
-            let movies = simkl::fetch("movies", "completed")?;
-            let hours = simkl::fetch("movies", "hours")?;
-            Ok(format!(
-                "\u{001b}[0;36m\u{001b}[0m {movies} \
+            if let (Ok(movies), Ok(hours)) = (
+                simkl::fetch("movies", "completed"),
+                simkl::fetch("movies", "hours"),
+            ) {
+                Ok(format!(
+                    "\u{001b}[0;36m\u{001b}[0m {movies} \
 \u{001b}[0;36m\u{001b}[0m {hours}h"
-            ))
+                ))
+            } else {
+                Ok(String::new())
+            }
+            
         }
 
         "myanimelist" => {
-            let anime = myanimelist::fetch("anime_total")?;
-            let manga = myanimelist::fetch("manga_total")?;
-            let episodes = myanimelist::fetch("anime_episodes")?;
-            let chapters = myanimelist::fetch("manga_chapters")?;
-            Ok(format!(
-                "\u{001b}[0;36m\u{001b}[0m {anime} \
+            if let (Ok(anime), Ok(manga), Ok(episodes), Ok(chapters)) = (
+                myanimelist::fetch("anime_total"),
+                myanimelist::fetch("manga_total"),
+                myanimelist::fetch("anime_episodes"),
+                myanimelist::fetch("manga_chapters"),
+            ) {
+                Ok(format!(
+                    "\u{001b}[0;36m\u{001b}[0m {anime} \
 \u{001b}[0;36m\u{001b}[0m {episodes} \
 \u{001b}[0;36m󰂺\u{001b}[0m {manga} \
 \u{001b}[0;36m\u{001b}[0m {chapters}"
-            ))
+                ))
+            } else {
+                Ok(String::new())
+            }
         }
 
         "leetcode" => {
-            let rank = leetcode::fetch("rank")?;
-            Ok(format!(
-                "\u{001b}[0;36m󰆥\u{001b}[0m {rank}"
-            ))
+            if let Ok(rank) = leetcode::fetch("rank") {
+                Ok(format!("\u{001b}[0;36m󰆥\u{001b}[0m {rank}"))
+            } else {
+                Ok(String::new())
+            }
         }
 
         "instagram" => {
-            let followers = crate::fetchers::instagram::fetch("followers")?;
-            let following = crate::fetchers::instagram::fetch("following")?;
-            Ok(format!(
-                "\u{001b}[0;36m\u{001b}[0m {followers} \
+            if let (Ok(followers), Ok(following)) = (
+                instagram::fetch("followers"),
+                instagram::fetch("following"),
+            ) {
+                Ok(format!(
+                    "\u{001b}[0;36m\u{001b}[0m {followers} \
 \u{001b}[0;36m\u{001b}[0m  {following}"
-            ))
+                ))
+            } else {
+                Ok(String::new())
+            }
         }
 
         _ => Err(anyhow!("Unknown platform: {platform}")),
     }
 }
+
