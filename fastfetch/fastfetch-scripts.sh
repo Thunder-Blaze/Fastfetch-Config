@@ -118,12 +118,16 @@ case "$platform" in
         if cached=$(get_cached "$key" "$user"); then echo "$cached"; exit 0; fi
         resp=$(curl -sf "https://codeforces.com/api/user.info?handles=$user") || handle_error
         [[ $(echo "$resp" | jq -r .status) != "OK" ]] && handle_error
+        rating=$(jq -r '.result[0].rating // empty' <<< "$resp")
+        maxrating=$(jq -r '.result[0].maxRating // empty' <<< "$resp")
+        [[ -n "$rating" ]] && save_cache "cf_rating" "$rating" "$user"
+        [[ -n "$maxrating" ]] && save_cache "cf_maxrating" "$maxrating" "$user"
+
         case "$subparam" in
-            rating) val=$(jq -r '.result[0].rating // empty' <<< "$resp") ;;
-            maxrating) val=$(jq -r '.result[0].maxRating // empty' <<< "$resp") ;;
+            rating) echo "$rating" ;;
+            maxrating) echo "$maxrating" ;;
             *) print_help ;;
         esac
-        [[ -n "$val" ]] && save_cache "$key" "$val" "$user" && echo "$val" || handle_error
         ;;
 
     codechef)
@@ -132,16 +136,17 @@ case "$platform" in
         key="cc_${subparam}"
         if cached=$(get_cached "$key" "$user"); then echo "$cached"; exit 0; fi
         resp=$(curl -sf "https://www.codechef.com/users/$user") || handle_error
+        rating=$(grep -oP '<div class="rating-number">(\d+)' <<< "$resp" | grep -oP '\d+')
+        maxrating=$(grep -oP 'Highest Rating [^0-9]*\K\d+' <<< "$resp")
+
+        [[ -n "$rating" ]] && save_cache "cc_rating" "$rating" "$user"
+        [[ -n "$maxrating" ]] && save_cache "cc_maxrating" "$maxrating" "$user"
+
         case "$subparam" in
-            rating)
-                val=$(grep -oP '<div class="rating-number">(\d+)' <<< "$resp" | grep -oP '\d+')
-                ;;
-            maxrating)
-                val=$(grep -oP 'Highest Rating [^0-9]*\K\d+' <<< "$resp")
-                ;;
+            rating) echo "$rating" ;;
+            maxrating) echo "$maxrating" ;;
             *) print_help ;;
         esac
-        [[ -n "$val" ]] && save_cache "$key" "$val" "$user" && echo "$val" || handle_error
         ;;
 
     leetcode)
@@ -166,20 +171,44 @@ case "$platform" in
 
         case "$subparam" in
             repos|followers|following)
-                if [[ "$subparam" == "repos" ]]; then
-                    subparam="public_repos"
-                fi
-                val=$(curl -sf "https://api.github.com/users/$user" | jq -r ".${subparam} // 0") || handle_error
+                resp=$(curl -sf "https://api.github.com/users/$user") || handle_error
+                repos=$(jq -r '.public_repos // 0' <<< "$resp")
+                followers=$(jq -r '.followers // 0' <<< "$resp")
+                following=$(jq -r '.following // 0' <<< "$resp")
+
+                save_cache "gh_repos" "$repos" "$user"
+                save_cache "gh_followers" "$followers" "$user"
+                save_cache "gh_following" "$following" "$user"
+
+                case "$subparam" in
+                    repos) echo "$repos" ;;
+                    followers) echo "$followers" ;;
+                    following) echo "$following" ;;
+                esac
                 ;;
+
+            stars|forks)
+                resp=$(curl -sf "https://api.github-star-counter.workers.dev/user/$user") || handle_error
+                stars=$(jq -r '.stars // 0' <<< "$resp")
+                forks=$(jq -r '.forks // 0' <<< "$resp")
+
+                save_cache "gh_stars" "$stars" "$user"
+                save_cache "gh_forks" "$forks" "$user"
+
+                case "$subparam" in
+                    stars) echo "$stars" ;;
+                    forks) echo "$forks" ;;
+                esac
+                ;;
+
             prs)
                 val=$(curl -sf "https://api.github.com/search/issues?q=author:$user+type:pr" | jq -r '.total_count // 0') || handle_error
+                save_cache "gh_prs" "$val" "$user"
+                echo "$val"
                 ;;
-            stars|forks)
-                val=$(curl -sf "https://api.github-star-counter.workers.dev/user/$user" | jq -r ".${subparam} // 0") || handle_error
-                ;;
+
             *) print_help ;;
         esac
-        [[ -n "$val" ]] && save_cache "$key" "$val" "$user" && echo "$val" || handle_error
         ;;
 
     anilist)
@@ -197,14 +226,23 @@ EOF
 
         resp=$(curl -sf -X POST -H "Content-Type: application/json" -d "$query" https://graphql.anilist.co) || handle_error
 
+        anime_count=$(jq -r '.data.User.statistics.anime.count // 0' <<< "$resp")
+        episodes=$(jq -r '.data.User.statistics.anime.episodesWatched // 0' <<< "$resp")
+        manga_count=$(jq -r '.data.User.statistics.manga.count // 0' <<< "$resp")
+        chapters=$(jq -r '.data.User.statistics.manga.chaptersRead // 0' <<< "$resp")
+
+        save_cache "al_anime_count" "$anime_count" "$user"
+        save_cache "al_episodes" "$episodes" "$user"
+        save_cache "al_manga_count" "$manga_count" "$user"
+        save_cache "al_chapters" "$chapters" "$user"
+
         case "$subparam" in
-            anime_count) val=$(jq -r '.data.User.statistics.anime.count // 0' <<< "$resp") ;;
-            episodes)    val=$(jq -r '.data.User.statistics.anime.episodesWatched // 0' <<< "$resp") ;;
-            manga_count) val=$(jq -r '.data.User.statistics.manga.count // 0' <<< "$resp") ;;
-            chapters)    val=$(jq -r '.data.User.statistics.manga.chaptersRead // 0' <<< "$resp") ;;
+            anime_count) echo "$anime_count" ;;
+            episodes) echo "$episodes" ;;
+            manga_count) echo "$manga_count" ;;
+            chapters) echo "$chapters" ;;
             *) print_help ;;
         esac
-        [[ -n "$val" ]] && save_cache "$key" "$val" "$user" && echo "$val" || handle_error
         ;;
 
     *) print_help ;;
