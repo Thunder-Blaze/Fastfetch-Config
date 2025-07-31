@@ -14,6 +14,7 @@ Custom configuration and statistics script for [Fastfetch](https://github.com/fa
   - ✅ CodeChef (current rating, maximum rating)
   - ✅ GitHub (public repos, PRs, stars, forks, following, followers)
   - ✅ AniList (anime count, episodes watched, manga count, manga read)
+  - ✅ Simkl (total watch hours, completed anime, anime watch hours, completed movies, movies watch hours, completed tv, tv watch hours)
 - ⏱️ Caching system to avoid repeated API calls (1-day TTL).
 - 📦 Easy Installation and Configuration.
 
@@ -73,23 +74,30 @@ chmod +x ~/.config/fastfetch/fastfetch-wrapper.sh
 
 ## 🧠 Supported Stats
 
-| Command                  | Description                    |
-|--------------------------|--------------------------------|
-| `codeforces rating`      | Codeforces Current Rating      |
-| `codeforces maxrating`   | Codeforces Max Rating          |
-| `codechef rating`        | CodeChef Current Rating        |
-| `codechef maxrating`     | CodeChef Max Rating            |
-| `leetcode rating`        | LeetCode Current Rating        |
-| `github repos`           | GitHub public repo count       |
-| `github followers`       | GitHub User Followers          |
-| `github follwing`        | GitHub User Following          |
-| `github prs`             | Github Total PRs               |
-| `github stars`           | GitHub User Repository Stars   |
-| `github forks`           | Github User Repository Forks   |
-| `anilist anime_count`    | AniList Anime Watched          |
-| `anilist episodes`       | AniList Episodes Watched       |
-| `anilist manga_count`    | AniList Manga Read             |
-| `anilist chapters`       | AniList Chapters Read          |
+| Command                  | Description                     |
+|--------------------------|---------------------------------|
+| `codeforces rating`      | Codeforces Current Rating       |
+| `codeforces maxrating`   | Codeforces Max Rating           |
+| `codechef rating`        | CodeChef Current Rating         |
+| `codechef maxrating`     | CodeChef Max Rating             |
+| `leetcode rating`        | LeetCode Current Rating         |
+| `github repos`           | GitHub public repo count        |
+| `github followers`       | GitHub User Followers           |
+| `github follwing`        | GitHub User Following           |
+| `github prs`             | Github Total PRs                |
+| `github stars`           | GitHub User Repository Stars    |
+| `github forks`           | Github User Repository Forks    |
+| `anilist anime_count`    | AniList Anime Watched           |
+| `anilist episodes`       | AniList Episodes Watched        |
+| `anilist manga_count`    | AniList Manga Read              |
+| `anilist chapters`       | AniList Chapters Read           |
+| `simkl totalhours`       | Simkl Total Watch Hours         |
+| `simkl movies completed` | Simkl Movie Completed Count     |
+| `simkl movies hours`     | Simkl Movie Watch Hours         |
+| `simkl anime completed`  | Simkl Anime Completed Count     |
+| `simkl anime hours`      | Simkl Anime Watch Hours         |
+| `simkl tv completed`     | Simkl TV Series Completed Count |
+| `simkl tv hours`         | Simkl TV Series Watch Hours     |
 
 ---
 
@@ -104,6 +112,8 @@ GitHub=Thunder-Blaze
 AniList=ThunderBlaze
 ...
 ```
+
+> Note - For Simkl UserID, visit `https://simkl.com/profile`, the URL will change to `https://simkl.com/XXXXXXX/`, this XXXXXXX is your Simkl User Id 
 
 ### Caching
 
