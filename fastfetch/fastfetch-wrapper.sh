@@ -32,6 +32,11 @@ case "$PLATFORM" in
         chapters=$(/home/$USER/.config/fastfetch/fastfetch-scripts.sh anilist chapters)
         echo "\u001b[0;36m\u001b[0m $anime \u001b[0;36m\u001b[0m $episodes \u001b[0;36m󰂺\u001b[0m $manga \u001b[0;36m\u001b[0m $chapters"
         ;;
+    "simkl")
+        simkl_movies_hours=$(/home/$USER/.config/fastfetch/fastfetch-scripts.sh simkl movies hours)
+        simkl_movies=$(/home/$USER/.config/fastfetch/fastfetch-scripts.sh simkl movies completed)
+        echo "\u001b[0;36m\u001b[0m $simkl_movies \u001b[0;36m\u001b[0m ${simkl_movies_hours}h"
+        ;;
     *)
         echo "Unknown platform: $PLATFORM"
         exit 1
