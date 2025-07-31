@@ -1,2 +1,3 @@
 .cache
 fastfetch-scripts.conf
+**/target
