@@ -1,14 +1,15 @@
-use crate::fetchers::{anilist, codechef, codeforces, github, simkl, myanimelist, leetcode, instagram};
-use anyhow::{anyhow, Result};
+use crate::fetchers::{
+    anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, simkl,
+};
+use anyhow::{Result, anyhow};
 use std::result::Result::Ok;
 
 pub fn run_wrapper(platform: &str) -> Result<String> {
     match platform {
         "codeforces" => {
-            if let (Ok(rating), Ok(max)) = (
-                codeforces::fetch("rating"),
-                codeforces::fetch("maxrating"),
-            ) {
+            if let (Ok(rating), Ok(max)) =
+                (codeforces::fetch("rating"), codeforces::fetch("maxrating"))
+            {
                 Ok(format!("{rating} \u{001b}[0;36m\u{001b}[0m {max}"))
             } else {
                 Ok(String::new())
@@ -16,10 +17,8 @@ pub fn run_wrapper(platform: &str) -> Result<String> {
         }
 
         "codechef" => {
-            if let (Ok(rating), Ok(max)) = (
-                codechef::fetch("rating"),
-                codechef::fetch("maxrating"),
-            ) {
+            if let (Ok(rating), Ok(max)) = (codechef::fetch("rating"), codechef::fetch("maxrating"))
+            {
                 Ok(format!("{rating} \u{001b}[0;36m\u{001b}[0m {max}"))
             } else {
                 Ok(String::new())
@@ -74,7 +73,6 @@ pub fn run_wrapper(platform: &str) -> Result<String> {
             } else {
                 Ok(String::new())
             }
-            
         }
 
         "myanimelist" => {
@@ -104,10 +102,9 @@ pub fn run_wrapper(platform: &str) -> Result<String> {
         }
 
         "instagram" => {
-            if let (Ok(followers), Ok(following)) = (
-                instagram::fetch("followers"),
-                instagram::fetch("following"),
-            ) {
+            if let (Ok(followers), Ok(following)) =
+                (instagram::fetch("followers"), instagram::fetch("following"))
+            {
                 Ok(format!(
                     "\u{001b}[0;36m\u{001b}[0m {followers} \
 \u{001b}[0;36m\u{001b}[0m  {following}"
@@ -120,4 +117,3 @@ pub fn run_wrapper(platform: &str) -> Result<String> {
         _ => Err(anyhow!("Unknown platform: {platform}")),
     }
 }
-

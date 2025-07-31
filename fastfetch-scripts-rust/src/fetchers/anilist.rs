@@ -1,5 +1,5 @@
 use crate::{cache, config};
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use reqwest::blocking::Client;
 use serde::Deserialize;
 use std::collections::HashMap;

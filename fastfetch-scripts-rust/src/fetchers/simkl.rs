@@ -1,5 +1,5 @@
 use crate::{cache, config};
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use reqwest::blocking::Client;
 use serde::Deserialize;
 
@@ -47,11 +47,7 @@ pub fn fetch(media_type: &str, stat_type: &str) -> Result<String> {
     let extract_stats = |media: Option<MediaStats>| -> (String, String) {
         let media = media.unwrap_or_default();
 
-        let hours = media
-            .total_mins
-            .map(|m| m / 60)
-            .unwrap_or(0)
-            .to_string();
+        let hours = media.total_mins.map(|m| m / 60).unwrap_or(0).to_string();
 
         let completed = media
             .completed

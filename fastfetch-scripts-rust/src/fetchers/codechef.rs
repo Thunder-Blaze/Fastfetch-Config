@@ -1,5 +1,5 @@
 use crate::{cache, config};
-use anyhow::{anyhow, bail, Result};
+use anyhow::{Result, anyhow, bail};
 use regex::Regex;
 
 /// Extract rating and max rating from CodeChef HTML.

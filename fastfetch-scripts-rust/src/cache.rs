@@ -59,4 +59,3 @@ pub fn save_cache(key: &str, val: &str, username: &str) {
     }
     writeln!(file, "{}", new_line).expect("Failed to write new cache entry");
 }
-

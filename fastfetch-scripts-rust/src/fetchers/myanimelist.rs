@@ -1,7 +1,7 @@
 use crate::{cache, config};
-use anyhow::{anyhow, Result};
-use serde::Deserialize;
+use anyhow::{Result, anyhow};
 use reqwest::blocking::Client;
+use serde::Deserialize;
 use std::collections::HashMap;
 
 #[derive(Deserialize, Default)]
@@ -42,7 +42,10 @@ pub fn fetch(subparam: &str) -> Result<String> {
 
     let client = Client::new();
     let resp: MALStats = client
-        .get(&format!("https://api.jikan.moe/v4/users/{}/statistics", user))
+        .get(&format!(
+            "https://api.jikan.moe/v4/users/{}/statistics",
+            user
+        ))
         .send()?
         .json()?;
 

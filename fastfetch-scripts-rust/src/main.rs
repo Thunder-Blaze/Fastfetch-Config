@@ -1,14 +1,14 @@
-mod config;
 mod cache;
+mod config;
 mod fetchers {
-    pub mod github;
-    pub mod codeforces;
-    pub mod codechef;
-    pub mod leetcode;
-    pub mod simkl;
     pub mod anilist;
-    pub mod myanimelist;
+    pub mod codechef;
+    pub mod codeforces;
+    pub mod github;
     pub mod instagram;
+    pub mod leetcode;
+    pub mod myanimelist;
+    pub mod simkl;
 }
 mod wrapper;
 
@@ -32,7 +32,10 @@ fn main() -> Result<()> {
             return Ok(());
         }
     }
-    if args.len() < 3 { print_help(); return Ok(()); }
+    if args.len() < 3 {
+        print_help();
+        return Ok(());
+    }
     if args.len() == 3 && args[1] == "wrapper" {
         let output = wrapper::run_wrapper(&args[2])?;
         println!("{output}");
@@ -50,11 +53,14 @@ fn main() -> Result<()> {
         "simkl" => {
             let stat_type = sub2.unwrap_or("completed");
             fetchers::simkl::fetch(sub, &stat_type)?
-        },
+        }
         "anilist" => fetchers::anilist::fetch(sub)?,
         "myanimelist" => fetchers::myanimelist::fetch(sub)?,
         "instagram" => fetchers::instagram::fetch(sub)?,
-        _ => { print_help(); return Ok(()); }
+        _ => {
+            print_help();
+            return Ok(());
+        }
     };
 
     println!("{}", output);
