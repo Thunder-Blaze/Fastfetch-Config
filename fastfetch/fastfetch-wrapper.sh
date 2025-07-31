@@ -26,9 +26,11 @@ case "$PLATFORM" in
         echo "\u001b[0;36m\u001b[0m $repos \u001b[0;36m\u001b[0m $prs \u001b[0;36m\u001b[0m $stars \u001b[0;36m\u001b[0m $followers"
         ;;
     "anilist")
-        a=$(/home/$USER/.config/fastfetch/fastfetch-scripts.sh anilist anime_count)
-        b=$(/home/$USER/.config/fastfetch/fastfetch-scripts.sh anilist manga_count)
-        echo "\u001b[0;36m\u001b[0m $a \u001b[0;36m󰂺\u001b[0m $b"
+        anime=$(/home/$USER/.config/fastfetch/fastfetch-scripts.sh anilist anime_count)
+        manga=$(/home/$USER/.config/fastfetch/fastfetch-scripts.sh anilist manga_count)
+        episodes=$(/home/$USER/.config/fastfetch/fastfetch-scripts.sh anilist episodes)
+        chapters=$(/home/$USER/.config/fastfetch/fastfetch-scripts.sh anilist chapters)
+        echo "\u001b[0;36m\u001b[0m $anime \u001b[0;36m\u001b[0m $episodes \u001b[0;36m󰂺\u001b[0m $manga \u001b[0;36m\u001b[0m $chapters"
         ;;
     *)
         echo "Unknown platform: $PLATFORM"
