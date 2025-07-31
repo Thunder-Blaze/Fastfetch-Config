@@ -2,7 +2,7 @@
 
 Custom configuration and statistics script for [Fastfetch](https://github.com/fastfetch-cli/fastfetch), designed to display personalized system and online profile stats in a clean and minimal way.
 
-<img src="assets/Preview.webp" width="100%" alt="Fastfetch Preview"/>
+<img src="assets/Preview3.webp" width="100%" alt="Fastfetch Preview"/>
 
 ---
 
@@ -169,4 +169,6 @@ AniList=ThunderBlaze
 
 Contributions, improvements, or stat suggestions are welcome! Feel free to open issues or PRs.
 
-
+Special Thanks to 
+[Zero](https://github.com/GraveEaterMadison) (instagram fetcher)
+[Insane](https://github.com/In-Saiyan) (codechef, codeforces, leetcode fetchers)
