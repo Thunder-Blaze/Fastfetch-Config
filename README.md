@@ -15,6 +15,9 @@ Custom configuration and statistics script for [Fastfetch](https://github.com/fa
   - ✅ GitHub (public repos, PRs, stars, forks, following, followers)
   - ✅ AniList (anime count, episodes watched, manga count, manga read)
   - ✅ Simkl (total watch hours, completed anime, anime watch hours, completed movies, movies watch hours, completed tv, tv watch hours)
+  - ✅ MyAnimeLisrt (anime count, episodes watched, manga count, manga read)
+  - ✅ LeetCode (current rank)
+  - ✅ Instagram (followers, following)
 - ⏱️ Caching system to avoid repeated API calls (1-day TTL).
 - 📦 Easy Installation and Configuration.
 

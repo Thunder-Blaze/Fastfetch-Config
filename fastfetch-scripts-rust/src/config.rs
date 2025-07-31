@@ -21,7 +21,7 @@ pub fn get_config_value(key: &str) -> Option<String> {
 
 /// Setup interactive config creation or update
 pub fn setup() -> io::Result<()> {
-    let keys = ["GitHub", "Codeforces", "CodeChef", "LeetCode", "AniList", "Simkl", "MyAnimeList"];
+    let keys = ["GitHub", "Codeforces", "CodeChef", "LeetCode", "AniList", "Simkl", "MyAnimeList", "Instagram"];
     let path = config_path().expect("Could not determine home directory");
     let dir = path.parent().unwrap();
 
