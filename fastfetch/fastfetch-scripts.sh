@@ -76,6 +76,18 @@ Platforms and Subparams:
     manga_count   → Manga read
     chapters      → Chapters read
 
+  simkl
+    anime         → Anime stats
+      hours        → Total hours watched
+      completed    → Completed anime count
+    tv           → TV stats
+      hours        → Total hours watched
+      completed    → Completed TV count
+    movies       → Movies stats
+      hours        → Total hours watched
+      completed    → Completed movies count
+    totalhours   → Total hours across all media
+
 Other Options:
   --setup         → Configure your usernames
   --help          → Show this help
@@ -96,12 +108,14 @@ if [[ "$1" == "--setup" ]]; then
     read -p "LeetCode Username: " lc
     read -p "GitHub Username: " gh
     read -p "AniList Username: " al
+    read -p "Simkl User ID: " sk
     {
         echo "Codeforces=$cf"
         echo "CodeChef=$cc"
         echo "LeetCode=$lc"
         echo "GitHub=$gh"
         echo "AniList=$al"
+        echo "Simkl=$sk"
     } > "$CONFIG"
     echo "Setup complete!"
     exit 0
@@ -244,6 +258,53 @@ EOF
             *) print_help ;;
         esac
         ;;
+    
+    simkl)
+        user=$(get_config_value "Simkl")
+        [[ -z "$user" ]] && echo "Missing Simkl user ID. Run with --setup" && exit 1
 
+        # Check if *any* simkl stat is already cached (we assume all are cached together)
+        probe_key="sk_anime_hours"
+        if cached=$(get_cached "$probe_key" "$user"); then
+            case "$subparam" in
+                anime|tv|movies)
+                    [[ "$3" == "hours" ]] && get_cached "sk_${subparam}_hours" "$user" && exit 0
+                    [[ "$3" == "completed" ]] && get_cached "sk_${subparam}_completed" "$user" && exit 0
+                    ;;
+                totalhours)
+                    get_cached "sk_totalhours" "$user" && exit 0
+                    ;;
+                *) print_help ;;
+            esac
+        fi
+
+        # Fetch all stats at once
+        resp=$(curl -sf "https://api.simkl.com/users/${user}/stats") || handle_error
+
+        # Extract and cache all stats
+        for type in anime tv movies; do
+            mins=$(jq -r ".${type}.total_mins // 0" <<< "$resp")
+            hours=$((mins / 60))
+            completed=$(jq -r ".${type}.completed.count // 0" <<< "$resp")
+            save_cache "sk_${type}_hours" "$hours" "$user"
+            save_cache "sk_${type}_completed" "$completed" "$user"
+        done
+        total_mins=$(jq -r '.total_mins' <<< "$resp")
+        total_hours=$((total_mins / 60))
+        save_cache "sk_totalhours" "$total_hours" "$user"
+
+        # Output requested stat
+        case "$subparam" in
+            anime|tv|movies)
+                [[ "$3" == "hours" ]] && echo "${!subparam}_hours" && get_cached "sk_${subparam}_hours" "$user" && exit 0
+                [[ "$3" == "completed" ]] && get_cached "sk_${subparam}_completed" "$user" && exit 0
+                ;;
+            totalhours)
+                echo "$total_hours"
+                ;;
+            *) print_help ;;
+        esac
+        ;;
+    
     *) print_help ;;
 esac
