@@ -1,46 +1,83 @@
-use crate::{config, cache};
+use crate::{cache, config};
 use anyhow::{anyhow, Result};
+use reqwest::blocking::Client;
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Default)]
+struct MediaStats {
+    #[serde(rename = "total_mins")]
+    total_mins: Option<u32>,
+    completed: Option<CompletedCount>,
+}
+
+#[derive(Deserialize, Default)]
+struct CompletedCount {
+    count: Option<u32>,
+}
+
+#[derive(Deserialize, Default)]
 struct SimklStats {
-    anime: SimklSection,
-    tv: SimklSection,
-    movies: SimklSection,
+    anime: Option<MediaStats>,
+    tv: Option<MediaStats>,
+    movies: Option<MediaStats>,
+    #[serde(rename = "total_mins")]
+    total_mins: Option<u32>,
 }
 
-#[derive(Deserialize)]
-struct SimklSection {
-    hours: u32,
-    completed: u32,
-}
+pub fn fetch(media_type: &str, stat_type: &str) -> Result<String> {
+    let user = config::get_config_value("Simkl")
+        .ok_or_else(|| anyhow!("Missing Simkl user ID. Run with --setup"))?;
 
-#[derive(Deserialize)]
-struct SimklResponse {
-    stats: SimklStats,
-}
+    let cache_key = format!("sk_{}_{}", media_type, stat_type);
 
-pub fn fetch(subparam: &str) -> Result<String> {
-    let key = format!("simkl_{}", subparam);
-    let user = config::get_config_value("Simkl").ok_or_else(|| anyhow!("No Simkl username"))?;
-    if let Some(cached) = cache::get_cached(&key, &user) {
-        return Ok(cached);
+    // If *any* stat is cached, assume all are
+    if cache::get_cached("sk_anime_hours", &user).is_some() {
+        return cache::get_cached(&cache_key, &user)
+            .ok_or_else(|| anyhow!("Cached value not found for Simkl"));
     }
 
-    let url = format!("https://api.simkl.com/users/{}/stats", user);
-    let resp: SimklStats = reqwest::blocking::get(&url)?.json()?;
+    // Fetch all stats in one go
+    let client = Client::new();
+    let resp = client
+        .get(&format!("https://api.simkl.com/users/{}/stats", user))
+        .send()?
+        .error_for_status()?
+        .json::<SimklStats>()?;
 
-    let val = match subparam {
-        "anime_hours" => resp.anime.hours.to_string(),
-        "anime_completed" => resp.anime.completed.to_string(),
-        "tv_hours" => resp.tv.hours.to_string(),
-        "tv_completed" => resp.tv.completed.to_string(),
-        "movie_hours" => resp.movies.hours.to_string(),
-        "movie_completed" => resp.movies.completed.to_string(),
-        _ => anyhow::bail!("bad subparam"),
+    let extract_stats = |media: Option<MediaStats>| -> (String, String) {
+        let media = media.unwrap_or_default();
+
+        let hours = media
+            .total_mins
+            .map(|m| m / 60)
+            .unwrap_or(0)
+            .to_string();
+
+        let completed = media
+            .completed
+            .unwrap_or_default()
+            .count
+            .unwrap_or(0)
+            .to_string();
+
+        (hours, completed)
     };
 
-    cache::save_cache(&key, &val, &user);
-    Ok(val)
-}
+    let (anime_hours, anime_completed) = extract_stats(resp.anime);
+    let (tv_hours, tv_completed) = extract_stats(resp.tv);
+    let (movies_hours, movies_completed) = extract_stats(resp.movies);
+    let total_hours = resp.total_mins.unwrap_or(0) / 60;
 
+    // Save all values to cache
+    cache::save_cache("sk_anime_hours", &anime_hours, &user);
+    cache::save_cache("sk_anime_completed", &anime_completed, &user);
+    cache::save_cache("sk_tv_hours", &tv_hours, &user);
+    cache::save_cache("sk_tv_completed", &tv_completed, &user);
+    cache::save_cache("sk_movies_hours", &movies_hours, &user);
+    cache::save_cache("sk_movies_completed", &movies_completed, &user);
+    cache::save_cache("sk_totalhours", &total_hours.to_string(), &user);
+
+    // Retrieve only the one user asked for
+    cache::get_cached(&cache_key, &user)
+        .ok_or_else(|| anyhow!("Missing Simkl stat '{}'", cache_key))
+}
