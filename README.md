@@ -27,14 +27,22 @@ Custom configuration and statistics script for [Fastfetch](https://github.com/fa
 
 ```bash
 Fastfetch-Config/
-├── pngs/                   # Folder Containing about 50 high quality images for fastfetch
 ├── assets/
 │   ├── Preview1.png            # Preview image (red theme)
 │   └── Preview2.png            # Preview image (green theme)
 ├── fastfetch/
+│   ├── pngs/                   # Folder Containing about 50 high quality images for fastfetch
 │   ├── config.jsonc            # Main Fastfetch config
-│   ├── fastfetch-scripts.sh    # Script to fetch and cache stats
-│   └── fastfetch-wrapper.sh    # Wrapper to Format the Script's Data for fastfetch
+│   └── fastfetch-scripts       # Script to format, fetch and cache stats (written in Rust)
+├── fastfetch-scripts-rust/     # Source code for the Rust script
+│   ├── Cargo.toml              # Rust dependencies
+│   └── src/
+│       ├── fetchers/           # Fetchers for various stats
+│       ├── config.rs           # Configuration handling for the Rust script
+│       ├── main.rs             # Main entry point for the Rust script
+│       ├── cache.rs            # Caching Functions for the Rust script
+│       └── wrapper.rs          # Functions format stats for the Rust script
+├── fastfetch-scripts-bash/     # Source code for the Bash scripts (Older version)
 ├── installer.sh            # Installer for Easy Installation
 └── README.md               # Readme For the Project
 ```
@@ -65,8 +73,7 @@ chmod +x ./installer.sh
 
 ```bash
 # Just In Case
-chmod +x ~/.config/fastfetch/fastfetch-scripts.sh
-chmod +x ~/.config/fastfetch/fastfetch-wrapper.sh
+chmod +x ~/.config/fastfetch/fastfetch-scripts
 ```
 
 ### 4. Update your Fastfetch config
@@ -77,30 +84,51 @@ chmod +x ~/.config/fastfetch/fastfetch-wrapper.sh
 
 ## 🧠 Supported Stats
 
-| Command                  | Description                     |
-|--------------------------|---------------------------------|
-| `codeforces rating`      | Codeforces Current Rating       |
-| `codeforces maxrating`   | Codeforces Max Rating           |
-| `codechef rating`        | CodeChef Current Rating         |
-| `codechef maxrating`     | CodeChef Max Rating             |
-| `leetcode rating`        | LeetCode Current Rating         |
-| `github repos`           | GitHub public repo count        |
-| `github followers`       | GitHub User Followers           |
-| `github follwing`        | GitHub User Following           |
-| `github prs`             | Github Total PRs                |
-| `github stars`           | GitHub User Repository Stars    |
-| `github forks`           | Github User Repository Forks    |
-| `anilist anime_count`    | AniList Anime Watched           |
-| `anilist episodes`       | AniList Episodes Watched        |
-| `anilist manga_count`    | AniList Manga Read              |
-| `anilist chapters`       | AniList Chapters Read           |
-| `simkl totalhours`       | Simkl Total Watch Hours         |
-| `simkl movies completed` | Simkl Movie Completed Count     |
-| `simkl movies hours`     | Simkl Movie Watch Hours         |
-| `simkl anime completed`  | Simkl Anime Completed Count     |
-| `simkl anime hours`      | Simkl Anime Watch Hours         |
-| `simkl tv completed`     | Simkl TV Series Completed Count |
-| `simkl tv hours`         | Simkl TV Series Watch Hours     |
+> These Commands are For the Rust Script `fastfetch-scripts`, you can also use the Bash Script, but it is not recommended as it is deprecated and will not receive any updates.
+
+| Wrapping Commands         |
+|---------------------------|
+| wrapper anilist           |
+| wrapper github            |
+| wrapper codechef          |
+| wrapper codeforces        |
+| wrapper myanimelist       |
+| wrapper simkl             |
+| wrapper leetcode          |
+| wrapper instagram         |
+
+
+| Command                         | Description                     |
+|---------------------------------|---------------------------------|
+| `codeforces rating`             | Codeforces Current Rating       |
+| `codeforces maxrating`          | Codeforces Max Rating           |
+| `codechef rating`               | CodeChef Current Rating         |
+| `codechef maxrating`            | CodeChef Max Rating             |
+| `leetcode rating`               | LeetCode Current Rating         |
+| `github repos`                  | GitHub public repo count        |
+| `github followers`              | GitHub User Followers           |
+| `github follwing`               | GitHub User Following           |
+| `github prs`                    | Github Total PRs                |
+| `github stars`                  | GitHub User Repository Stars    |
+| `github forks`                  | Github User Repository Forks    |
+| `anilist anime_count`           | AniList Anime Watched           |
+| `anilist episodes`              | AniList Episodes Watched        |
+| `anilist manga_count`           | AniList Manga Read              |
+| `anilist chapters`              | AniList Chapters Read           |
+| `simkl totalhours`              | Simkl Total Watch Hours         |
+| `simkl movies completed`        | Simkl Movie Completed Count     |
+| `simkl movies hours`            | Simkl Movie Watch Hours         |
+| `simkl anime completed`         | Simkl Anime Completed Count     |
+| `simkl anime hours`             | Simkl Anime Watch Hours         |
+| `simkl tv completed`            | Simkl TV Series Completed Count |
+| `simkl tv hours`                | Simkl TV Series Watch Hours     |
+| `myanimelist anime_count`       | MyAnimeList Anime Watched       |
+| `myanimelist anime_episodes`    | MyAnimeList Episodes Watched    |
+| `myanimelist manga_total`       | MyAnimeList Manga Read          |
+| `myanimelist manga_chapters`    | MyAnimeList Chapters Read       |
+| `instagram followers`           | Instagram User Followers        |
+| `instagram following`           | Instagram User Following        |
+| `leetcode rank`                 | LeetCode Current Rank           |
 
 ---
 
