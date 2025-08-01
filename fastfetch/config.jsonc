@@ -156,7 +156,7 @@
         },
         {
             "type": "command",
-            "key": "  󰄨  Simkl     ",
+            "key": "  󰄨  Simkl      ",
             "keyColor": "red",
             "text": "a=$(/home/$USER/.config/fastfetch/fastfetch-scripts wrapper simkl);echo -e $a"
         },
