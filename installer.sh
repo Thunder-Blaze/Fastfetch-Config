@@ -20,9 +20,9 @@ cp -r ./fastfetch/* "$FASTFETCH_DIR/"
 echo "Fastfetch configuration files copied successfully."
 echo "Initializing Fastfetch Script..."
 
-if [[ -x "$FASTFETCH_DIR/fastfetch-scripts" ]]; then
-    "$FASTFETCH_DIR/fastfetch-scripts" --setup
+if [[ -x "$FASTFETCH_DIR/tsukiyomi-fetch" ]]; then
+    "$FASTFETCH_DIR/tsukiyomi-fetch" --setup
 else
-    echo "Error: fastfetch-scripts not found or not executable."
+    echo "Error: tsukiyomi-fetch not found or not executable."
     exit 1
 fi

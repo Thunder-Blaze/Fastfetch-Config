@@ -9,7 +9,7 @@ Custom configuration and statistics script for [Fastfetch](https://github.com/fa
 ## 🎯 Features
 
 - 💻 Minimal and clean Fastfetch configuration with lots of high quality anime images.
-- 📊 Modular `fastfetch-scripts.sh` script to show dynamic stats from:
+- 📊 Modular `tsukiyomi-fetch` script to show dynamic stats from:
   - ✅ Codeforces (current rating, maximum rating)
   - ✅ CodeChef (current rating, maximum rating)
   - ✅ GitHub (public repos, PRs, stars, forks, following, followers)
@@ -73,7 +73,7 @@ chmod +x ./installer.sh
 
 ```bash
 # Just In Case
-chmod +x ~/.config/fastfetch/fastfetch-scripts
+chmod +x ~/.config/fastfetch/tsukiyomi-fetch
 ```
 
 ### 4. Update your Fastfetch config
@@ -84,7 +84,7 @@ chmod +x ~/.config/fastfetch/fastfetch-scripts
 
 ## 🧠 Supported Stats
 
-> These Commands are For the Rust Script `fastfetch-scripts`, you can also use the Bash Script, but it is not recommended as it is deprecated and will not receive any updates.
+> These Commands are For the Rust Script `tsukiyomi-fetch`, you can also use the Bash Script, but it is not recommended as it is deprecated and will not receive any updates.
 
 | Wrapping Commands         |
 |---------------------------|

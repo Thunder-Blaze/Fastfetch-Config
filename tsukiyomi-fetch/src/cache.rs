@@ -73,15 +73,18 @@ pub fn get_cached(key: &str, username: &str) -> Result<Option<String>> {
     
     let reader = BufReader::new(file);
     let mut lines: Vec<String> = reader.lines().collect::<std::io::Result<_>>()?;
-    lines.reverse();
+    lines.reverse(); // Check most recent entries first
 
     for line in lines {
         if let Some(entry) = CacheEntry::from_line(&line) {
-            if entry.key == key && entry.username == username {
-                if entry.is_valid() {
+            if entry.key == key {
+                // Found an entry for this key
+                if entry.username == username && entry.is_valid() {
+                    // Same username and valid cache
                     return Ok(Some(entry.value));
                 } else {
-                    break; // Found expired entry, stop looking
+                    // Either username changed or cache expired - need to refetch
+                    return Ok(None);
                 }
             }
         }
@@ -103,7 +106,8 @@ pub fn save_cache(key: &str, value: &str, username: &str) -> Result<()> {
             .into_iter()
             .filter(|line| {
                 if let Some(entry) = CacheEntry::from_line(line) {
-                    !(entry.key == key && entry.username == username)
+                    // Remove any existing entry for this key (regardless of username)
+                    entry.key != key
                 } else {
                     true // Keep malformed lines
                 }
@@ -136,7 +140,8 @@ pub fn save_multiple_cache(entries: &[(String, String)], username: &str) -> Resu
             .into_iter()
             .filter(|line| {
                 if let Some(entry) = CacheEntry::from_line(line) {
-                    !entries.iter().any(|(key, _)| entry.key == *key && entry.username == username)
+                    // Remove any existing entry for keys we're about to save (regardless of username)
+                    !entries.iter().any(|(key, _)| entry.key == *key)
                 } else {
                     true
                 }

@@ -116,49 +116,49 @@
             "type": "command",
             "key": "    Anilist    ",
             "keyColor": "yellow",
-            "text": "a=$(/home/$USER/.config/fastfetch/fastfetch-scripts wrapper anilist);echo -e $a"
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper anilist);echo -e $a"
         },
         {
             "type": "command",
             "key": "  󰊤  Github     ",
             "keyColor": "green",
-            "text": "a=$(/home/$USER/.config/fastfetch/fastfetch-scripts wrapper github);echo -e $a"
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper github);echo -e $a"
         },
         {
             "type": "command",
             "key": "  󰄨  CodeForces ",
             "keyColor": "blue",
-            "text": "a=$(/home/$USER/.config/fastfetch/fastfetch-scripts wrapper codeforces);echo -e $a"
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper codeforces);echo -e $a"
         },
         {
             "type": "command",
             "key": "    LeetCode   ",
             "keyColor": "magenta",
-            "text": "a=$(/home/$USER/.config/fastfetch/fastfetch-scripts wrapper leetcode);echo -e $a"
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper leetcode);echo -e $a"
         },
         {
             "type": "command",
             "key": "    Instagram  ",
             "keyColor": "magenta",
-            "text": "a=$(/home/$USER/.config/fastfetch/fastfetch-scripts wrapper instagram);echo -e $a"
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper instagram);echo -e $a"
         },
         {
             "type": "command",
             "key": "  󰫺  MyAnimeList",
             "keyColor": "magenta",
-            "text": "a=$(/home/$USER/.config/fastfetch/fastfetch-scripts wrapper myanimelist);echo -e $a"
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper myanimelist);echo -e $a"
         },
         {
             "type": "command",
             "key": "  󰭼  Codechef   ",
             "keyColor": "magenta",
-            "text": "a=$(/home/$USER/.config/fastfetch/fastfetch-scripts wrapper codechef);echo -e $a"
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper codechef);echo -e $a"
         },
         {
             "type": "command",
             "key": "  󰄨  Simkl      ",
             "keyColor": "red",
-            "text": "a=$(/home/$USER/.config/fastfetch/fastfetch-scripts wrapper simkl);echo -e $a"
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper simkl);echo -e $a"
         },
         {
             "type": "custom",
