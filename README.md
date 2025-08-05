@@ -26,15 +26,15 @@ Custom configuration and statistics script for [Fastfetch](https://github.com/fa
 ## 📁 Directory Structure
 
 ```bash
-Fastfetch-Config/
+Tsukiyomi-Fetch/
 ├── assets/
 │   ├── Preview1.png            # Preview image (red theme)
 │   └── Preview2.png            # Preview image (green theme)
 ├── fastfetch/
 │   ├── pngs/                   # Folder Containing about 50 high quality images for fastfetch
 │   ├── config.jsonc            # Main Fastfetch config
-│   └── fastfetch-scripts       # Script to format, fetch and cache stats (written in Rust)
-├── fastfetch-scripts-rust/     # Source code for the Rust script
+│   └── tsukiyomi-fetch         # Script to format, fetch and cache stats (written in Rust)
+├── tsukiyomi-fetch-rust/       # Source code for the Rust script
 │   ├── Cargo.toml              # Rust dependencies
 │   └── src/
 │       ├── fetchers/           # Fetchers for various stats
@@ -42,8 +42,11 @@ Fastfetch-Config/
 │       ├── main.rs             # Main entry point for the Rust script
 │       ├── cache.rs            # Caching Functions for the Rust script
 │       └── wrapper.rs          # Functions format stats for the Rust script
-├── fastfetch-scripts-bash/     # Source code for the Bash scripts (Older version)
+├── tsukiyomi-fetch-bash/       # Script to format, fetch and cache stats (written in Bash)
+│   ├── fastfetch-scripts.sh        # Bash script to fetch and format stats
+│   ├── fastfetch-wrapper.sh        # Bash wrapper script for fetching stats
 ├── installer.sh            # Installer for Easy Installation
+├── uninstaller.sh          # Uninstaller for Easy Installation
 └── README.md               # Readme For the Project
 ```
 
@@ -171,4 +174,4 @@ Contributions, improvements, or stat suggestions are welcome! Feel free to open 
 
 Special Thanks to 
 [Zero](https://github.com/GraveEaterMadison) (instagram fetcher)
-[Insane](https://github.com/In-Saiyan) (codechef, codeforces, leetcode fetchers)
+[Insane](https://github.com/In-Saiyan) (codechef fetcher)
