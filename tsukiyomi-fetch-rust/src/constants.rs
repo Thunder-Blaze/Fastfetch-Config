@@ -17,12 +17,12 @@ pub const MAX_RETRIES: usize = 3;
 // Platform-specific default icons for wrapper mode
 pub const CODEFORCES_ICONS: &[&str] = &[""];
 pub const CODECHEF_ICONS: &[&str] = &[""];
-pub const GITHUB_ICONS: &[&str] = &["", "", " ", ""];
+pub const GITHUB_ICONS: &[&str] = &["", "", "", ""];
 pub const ANILIST_ICONS: &[&str] = &["", "", "󰂺", ""];
 pub const SIMKL_ICONS: &[&str] = &["", ""];
 pub const MYANIMELIST_ICONS: &[&str] = &["", "", "󰂺", ""];
 pub const LEETCODE_ICONS: &[&str] = &["󰆥"];
-pub const INSTAGRAM_ICONS: &[&str] = &["", ""];
+pub const INSTAGRAM_ICONS: &[&str] = &["", ""];
 
 // Helper function to get platform-specific default icons
 pub fn get_platform_icons(platform: &str) -> &'static [&'static str] {
