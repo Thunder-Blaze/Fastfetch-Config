@@ -1,7 +1,17 @@
 use crate::fetchers::{
     anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, simkl,
 };
-use anyhow::{anyhow, Result};
+use crate::{constants, error::{FetchError, Result}};
+
+// Helper function to safely fetch values, returning empty string on any error
+fn safe_fetch<T>(result: anyhow::Result<T>) -> Option<T> {
+    result.ok()
+}
+
+// Helper for new error type fetchers
+fn safe_fetch_new<T>(result: crate::error::Result<T>) -> Option<T> {
+    result.ok()
+}
 
 /// Parse color name to ANSI color code
 fn parse_color_code(color: &str) -> &str {
@@ -48,152 +58,145 @@ fn parse_args(args: &[String]) -> (String, Vec<String>) {
 
 pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
     let (color_code, icons) = parse_args(args);
+    let platform_defaults = constants::get_platform_icons(platform);
 
-    let icon = |i: usize, default: &str| {
-        icons.get(i).cloned().unwrap_or_else(|| default.to_string())
+    let icon = |i: usize, fallback: &str| {
+        icons.get(i).cloned()
+            .or_else(|| platform_defaults.get(i).map(|s| s.to_string()))
+            .unwrap_or_else(|| fallback.to_string())
     };
     let color = |s: &str| format!("\x1b[0;{}m{}\x1b[0m", color_code, s);
 
     match platform {
         "codeforces" => {
-            if let (Ok(rating), Ok(max)) =
-                (codeforces::fetch("rating"), codeforces::fetch("maxrating"))
-            {
-                Ok(format!(
+            match (safe_fetch_new(codeforces::fetch("rating")), safe_fetch_new(codeforces::fetch("maxrating"))) {
+                (Some(rating), Some(max)) => Ok(format!(
                     "{} {} {}",
                     rating,
-                    color(&icon(0, "")),
+                    color(&icon(0, "")),
                     max
-                ))
-            } else {
-                Ok(String::new())
+                )),
+                _ => Ok(String::new()) // Silent failure on any error
             }
         }
 
         "codechef" => {
-            if let (Ok(rating), Ok(max)) = (codechef::fetch("rating"), codechef::fetch("maxrating"))
-            {
-                Ok(format!(
+            match (safe_fetch(codechef::fetch("rating")), safe_fetch(codechef::fetch("maxrating"))) {
+                (Some(rating), Some(max)) => Ok(format!(
                     "{} {} {}",
                     rating,
-                    color(&icon(0, "")),
+                    color(&icon(0, "")),
                     max
-                ))
-            } else {
-                Ok(String::new())
+                )),
+                _ => Ok(String::new())
             }
         }
 
         "github" => {
-            if let (Ok(repos), Ok(prs), Ok(stars), Ok(followers)) = (
-                github::fetch("repos"),
-                github::fetch("prs"),
-                github::fetch("stars"),
-                github::fetch("followers"),
+            match (
+                safe_fetch_new(github::fetch("repos")),
+                safe_fetch_new(github::fetch("prs")),
+                safe_fetch_new(github::fetch("stars")),
+                safe_fetch_new(github::fetch("followers")),
             ) {
-                Ok(format!(
+                (Some(repos), Some(prs), Some(stars), Some(followers)) => Ok(format!(
                     "{} {} {} {} {} {} {} {}",
-                    color(&icon(0, "")),
+                    color(&icon(0, "")),
                     repos,
-                    color(&icon(1, "")),
+                    color(&icon(1, "")),
                     prs,
-                    color(&icon(2, "")),
+                    color(&icon(2, "")),
                     stars,
-                    color(&icon(3, "")),
+                    color(&icon(3, "")),
                     followers
-                ))
-            } else {
-                Ok(String::new())
+                )),
+                _ => Ok(String::new())
             }
         }
 
         "anilist" => {
-            if let (Ok(anime), Ok(manga), Ok(episodes), Ok(chapters)) = (
-                anilist::fetch("anime_count"),
-                anilist::fetch("manga_count"),
-                anilist::fetch("episodes"),
-                anilist::fetch("chapters"),
+            match (
+                safe_fetch(anilist::fetch("anime_count")),
+                safe_fetch(anilist::fetch("manga_count")),
+                safe_fetch(anilist::fetch("episodes")),
+                safe_fetch(anilist::fetch("chapters")),
             ) {
-                Ok(format!(
+                (Some(anime), Some(manga), Some(episodes), Some(chapters)) => Ok(format!(
                     "{} {} {} {} {} {} {} {}",
-                    color(&icon(0, "")),
+                    color(&icon(0, "")),
                     anime,
-                    color(&icon(1, "")),
+                    color(&icon(1, "")),
                     episodes,
                     color(&icon(2, "󰂺")),
                     manga,
-                    color(&icon(3, "")),
+                    color(&icon(3, "")),
                     chapters
-                ))
-            } else {
-                Ok(String::new())
+                )),
+                _ => Ok(String::new())
             }
         }
 
         "simkl" => {
-            if let (Ok(movies), Ok(hours)) = (
-                simkl::fetch("movies", "completed"),
-                simkl::fetch("movies", "hours"),
+            match (
+                safe_fetch(simkl::fetch("movies", "completed")),
+                safe_fetch(simkl::fetch("movies", "hours")),
             ) {
-                Ok(format!(
+                (Some(movies), Some(hours)) => Ok(format!(
                     "{} {} {} {}h",
-                    color(&icon(0, "")),
+                    color(&icon(0, "")),
                     movies,
-                    color(&icon(1, "")),
+                    color(&icon(1, "")),
                     hours
-                ))
-            } else {
-                Ok(String::new())
+                )),
+                _ => Ok(String::new())
             }
         }
 
         "myanimelist" => {
-            if let (Ok(anime), Ok(manga), Ok(episodes), Ok(chapters)) = (
-                myanimelist::fetch("anime_total"),
-                myanimelist::fetch("manga_total"),
-                myanimelist::fetch("anime_episodes"),
-                myanimelist::fetch("manga_chapters"),
+            match (
+                safe_fetch(myanimelist::fetch("anime_total")),
+                safe_fetch(myanimelist::fetch("manga_total")),
+                safe_fetch(myanimelist::fetch("anime_episodes")),
+                safe_fetch(myanimelist::fetch("manga_chapters")),
             ) {
-                Ok(format!(
+                (Some(anime), Some(manga), Some(episodes), Some(chapters)) => Ok(format!(
                     "{} {} {} {} {} {} {} {}",
-                    color(&icon(0, "")),
+                    color(&icon(0, "")),
                     anime,
-                    color(&icon(1, "")),
+                    color(&icon(1, "")),
                     episodes,
                     color(&icon(2, "󰂺")),
                     manga,
-                    color(&icon(3, "")),
+                    color(&icon(3, "")),
                     chapters
-                ))
-            } else {
-                Ok(String::new())
+                )),
+                _ => Ok(String::new())
             }
         }
 
         "leetcode" => {
-            if let Ok(rank) = leetcode::fetch("rank") {
-                Ok(format!("{} {}", color(&icon(0, "󰆥")), rank))
-            } else {
-                Ok(String::new())
+            match safe_fetch(leetcode::fetch("rank")) {
+                Some(rank) => Ok(format!("{} {}", color(&icon(0, "󰆥")), rank)),
+                _ => Ok(String::new())
             }
         }
 
         "instagram" => {
-            if let (Ok(followers), Ok(following)) =
-                (instagram::fetch("followers"), instagram::fetch("following"))
-            {
-                Ok(format!(
+            match (
+                safe_fetch(instagram::fetch("followers")), 
+                safe_fetch(instagram::fetch("following"))
+            ) {
+                (Some(followers), Some(following)) => Ok(format!(
                     "{} {} {} {}",
-                    color(&icon(0, "")),
+                    color(&icon(0, "")),
                     followers,
-                    color(&icon(1, "")),
+                    color(&icon(1, "")),
                     following
-                ))
-            } else {
-                Ok(String::new())
+                )),
+                _ => Ok(String::new())
             }
         }
 
-        _ => Err(anyhow!("Unknown platform: {platform}")),
+        _ => Err(FetchError::platform_not_found(platform)),
     }
 }

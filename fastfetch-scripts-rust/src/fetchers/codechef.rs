@@ -25,7 +25,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
         .ok_or_else(|| anyhow!("Missing CodeChef username. Run with --setup"))?;
     let key = format!("cc_{}", subparam);
 
-    if let Some(cached) = cache::get_cached(&key, &user) {
+    if let Ok(Some(cached)) = cache::get_cached(&key, &user) {
         return Ok(cached);
     }
 
@@ -34,11 +34,11 @@ pub fn fetch(subparam: &str) -> Result<String> {
     let (rating, maxrating) = extract_ratings(&resp)?;
 
     if let Some(ref r) = rating {
-        cache::save_cache("cc_rating", r, &user);
+        cache::save_cache("cc_rating", r, &user)?;
     }
 
     if let Some(ref m) = maxrating {
-        cache::save_cache("cc_maxrating", m, &user);
+        cache::save_cache("cc_maxrating", m, &user)?;
     }
 
     let val = match subparam {

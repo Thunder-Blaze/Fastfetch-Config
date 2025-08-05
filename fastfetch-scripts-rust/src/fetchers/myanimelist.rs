@@ -36,7 +36,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
     let user = config::get_config_value("MyAnimeList").ok_or_else(|| anyhow!("No MAL username"))?;
     let key = format!("mal_{}", subparam);
 
-    if let Some(cached) = cache::get_cached(&key, &user) {
+    if let Ok(Some(cached)) = cache::get_cached(&key, &user) {
         return Ok(cached);
     }
 
@@ -68,7 +68,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
 
     // Save all
     for (k, v) in &cache_map {
-        cache::save_cache(&format!("mal_{}", k), v, &user);
+        cache::save_cache(&format!("mal_{}", k), v, &user)?;
     }
 
     // Return only requested

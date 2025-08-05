@@ -1,5 +1,4 @@
-use crate::{cache, config};
-use anyhow::{Result, anyhow, bail};
+use crate::{cache, config, http, error::{FetchError, Result}};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -15,35 +14,50 @@ struct CFUser {
     max_rating: Option<i32>,
 }
 
-pub fn fetch(subparam: &str) -> Result<String> {
-    let user = config::get_config_value("Codeforces")
-        .ok_or_else(|| anyhow!("Missing Codeforces username. Run with --setup"))?;
-    let key = format!("cf_{}", subparam);
+const SUPPORTED_PARAMS: &[&str] = &["rating", "maxrating"];
 
-    if let Some(cached) = cache::get_cached(&key, &user) {
+pub fn fetch(subparam: &str) -> Result<String> {
+    if !SUPPORTED_PARAMS.contains(&subparam) {
+        return Err(FetchError::invalid_param("Codeforces", subparam));
+    }
+
+    let username = config::get_config_value("Codeforces")
+        .ok_or_else(|| FetchError::config("Missing Codeforces handle. Run with --setup"))?;
+    
+    let cache_key = format!("cf_{}", subparam);
+
+    if let Ok(Some(cached)) = cache::get_cached(&cache_key, &username) {
         return Ok(cached);
     }
 
-    let url = format!("https://codeforces.com/api/user.info?handles={}", user);
-    let response: CFApi = reqwest::blocking::get(&url)?.json()?;
+    let url = http::endpoints::CODEFORCES_USER.url(&[&username]);
+    let response: CFApi = http::HTTP_CLIENT
+        .get(&url)
+        .send()?
+        .error_for_status()
+        .map_err(|e| FetchError::api("Codeforces", e.to_string()))?
+        .json()?;
+
     if response.status != "OK" {
-        bail!("Codeforces API returned non-OK status");
+        return Err(FetchError::api("Codeforces", "API returned non-OK status"));
     }
 
-    let user_info = &response.result[0];
+    let user_info = response.result.first()
+        .ok_or_else(|| FetchError::api("Codeforces", "No user data in response"))?;
 
-    // Cache only if values exist
-    if let Some(rating) = user_info.rating {
-        cache::save_cache("cf_rating", &rating.to_string(), &user);
-    }
+    // Cache both values when we fetch them
+    let entries = vec![
+        ("cf_rating".to_string(), user_info.rating.unwrap_or(0).to_string()),
+        ("cf_maxrating".to_string(), user_info.max_rating.unwrap_or(0).to_string()),
+    ];
+    
+    cache::save_multiple_cache(&entries, &username)?;
 
-    if let Some(max_rating) = user_info.max_rating {
-        cache::save_cache("cf_maxrating", &max_rating.to_string(), &user);
-    }
+    let value = match subparam {
+        "rating" => user_info.rating.unwrap_or(0).to_string(),
+        "maxrating" => user_info.max_rating.unwrap_or(0).to_string(),
+        _ => unreachable!(), // Already validated above
+    };
 
-    match subparam {
-        "rating" => Ok(user_info.rating.unwrap_or(0).to_string()),
-        "maxrating" => Ok(user_info.max_rating.unwrap_or(0).to_string()),
-        _ => bail!("Invalid subparam for Codeforces"),
-    }
+    Ok(value)
 }

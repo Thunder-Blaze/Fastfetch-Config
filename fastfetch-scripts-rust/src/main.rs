@@ -1,5 +1,9 @@
 mod cache;
 mod config;
+mod constants;
+mod error;
+mod fetcher;
+mod http;
 mod fetchers {
     pub mod anilist;
     pub mod codechef;
@@ -12,11 +16,40 @@ mod fetchers {
 }
 mod wrapper;
 
-use anyhow::Result;
+use error::Result;
 use std::env;
 
 fn print_help() {
-    println!("Usage: fastfetch <platform> <subparam> [subsub]");
+    println!("tsukiyomi-fetch - A fast statistics fetcher for various platforms");
+    println!();
+    println!("USAGE:");
+    println!("    tsukiyomi-fetch <platform> <metric> [options]");
+    println!("    tsukiyomi-fetch wrapper <platform> [--color <color>] [--icon <icon>...]");
+    println!("    tsukiyomi-fetch --setup");
+    println!("    tsukiyomi-fetch --help");
+    println!();
+    println!("PLATFORMS:");
+    println!("    github       GitHub statistics (repos, followers, following, stars, forks, prs)");
+    println!("    codeforces   Codeforces ratings (rating, maxrating)");
+    println!("    codechef     CodeChef ratings (rating, maxrating)");
+    println!("    leetcode     LeetCode statistics (rank)");
+    println!("    anilist      AniList statistics (anime_count, manga_count, episodes, chapters)");
+    println!("    simkl        Simkl statistics (movies, tv, anime with completed/hours)");
+    println!("    myanimelist  MyAnimeList statistics (anime_total, manga_total, etc.)");
+    println!("    instagram    Instagram statistics (followers, following)");
+    println!();
+    println!("OPTIONS:");
+    println!("    --setup      Interactive configuration setup");
+    println!("    --help, -h   Show this help message");
+    println!();
+    println!("WRAPPER OPTIONS:");
+    println!("    --color      Set color (black, red, green, yellow, blue, magenta, cyan, white)");
+    println!("    --icon       Set custom icons (can be used multiple times)");
+    println!();
+    println!("EXAMPLES:");
+    println!("    tsukiyomi-fetch github repos");
+    println!("    tsukiyomi-fetch wrapper github --color cyan --icon  --icon ");
+    println!("    tsukiyomi-fetch --setup");
 }
 
 fn main() -> Result<()> {
@@ -54,15 +87,15 @@ fn main() -> Result<()> {
     let output = match platform.as_str() {
         "github" => fetchers::github::fetch(sub)?,
         "codeforces" => fetchers::codeforces::fetch(sub)?,
-        "codechef" => fetchers::codechef::fetch(sub)?,
-        "leetcode" => fetchers::leetcode::fetch(sub)?,
+        "codechef" => fetchers::codechef::fetch(sub).map_err(error::FetchError::Legacy)?,
+        "leetcode" => fetchers::leetcode::fetch(sub).map_err(error::FetchError::Legacy)?,
         "simkl" => {
             let stat_type = sub2.unwrap_or("completed");
-            fetchers::simkl::fetch(sub, &stat_type)?
+            fetchers::simkl::fetch(sub, &stat_type).map_err(error::FetchError::Legacy)?
         }
-        "anilist" => fetchers::anilist::fetch(sub)?,
-        "myanimelist" => fetchers::myanimelist::fetch(sub)?,
-        "instagram" => fetchers::instagram::fetch(sub)?,
+        "anilist" => fetchers::anilist::fetch(sub).map_err(error::FetchError::Legacy)?,
+        "myanimelist" => fetchers::myanimelist::fetch(sub).map_err(error::FetchError::Legacy)?,
+        "instagram" => fetchers::instagram::fetch(sub).map_err(error::FetchError::Legacy)?,
         _ => {
             print_help();
             return Ok(());

@@ -13,7 +13,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
         .ok_or_else(|| anyhow!("Missing LeetCode username. Run with --setup"))?;
 
     let key = format!("lc_{}", subparam);
-    if let Some(cached) = cache::get_cached(&key, &user) {
+    if let Ok(Some(cached)) = cache::get_cached(&key, &user) {
         return Ok(cached);
     }
 
@@ -30,7 +30,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
 
             if let Some(ranking) = resp.ranking {
                 let rank_str = ranking.to_string();
-                cache::save_cache(&key, &rank_str, &user);
+                cache::save_cache(&key, &rank_str, &user)?;
                 Ok(rank_str)
             } else {
                 bail!("Could not fetch LeetCode Rank");

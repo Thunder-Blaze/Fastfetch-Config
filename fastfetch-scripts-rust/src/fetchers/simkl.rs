@@ -31,8 +31,8 @@ pub fn fetch(media_type: &str, stat_type: &str) -> Result<String> {
     let cache_key = format!("sk_{}_{}", media_type, stat_type);
 
     // If *any* stat is cached, assume all are
-    if cache::get_cached("sk_anime_hours", &user).is_some() {
-        return cache::get_cached(&cache_key, &user)
+    if cache::get_cached("sk_anime_hours", &user).ok().flatten().is_some() {
+        return cache::get_cached(&cache_key, &user)?
             .ok_or_else(|| anyhow!("Cached value not found for Simkl"));
     }
 
@@ -65,15 +65,19 @@ pub fn fetch(media_type: &str, stat_type: &str) -> Result<String> {
     let total_hours = resp.total_mins.unwrap_or(0) / 60;
 
     // Save all values to cache
-    cache::save_cache("sk_anime_hours", &anime_hours, &user);
-    cache::save_cache("sk_anime_completed", &anime_completed, &user);
-    cache::save_cache("sk_tv_hours", &tv_hours, &user);
-    cache::save_cache("sk_tv_completed", &tv_completed, &user);
-    cache::save_cache("sk_movies_hours", &movies_hours, &user);
-    cache::save_cache("sk_movies_completed", &movies_completed, &user);
-    cache::save_cache("sk_totalhours", &total_hours.to_string(), &user);
+    let cache_entries = vec![
+        ("sk_anime_hours".to_string(), anime_hours),
+        ("sk_anime_completed".to_string(), anime_completed),
+        ("sk_tv_hours".to_string(), tv_hours),
+        ("sk_tv_completed".to_string(), tv_completed),
+        ("sk_movies_hours".to_string(), movies_hours),
+        ("sk_movies_completed".to_string(), movies_completed),
+        ("sk_totalhours".to_string(), total_hours.to_string()),
+    ];
+    
+    cache::save_multiple_cache(&cache_entries, &user)?;
 
     // Retrieve only the one user asked for
-    cache::get_cached(&cache_key, &user)
+    cache::get_cached(&cache_key, &user)?
         .ok_or_else(|| anyhow!("Missing Simkl stat '{}'", cache_key))
 }

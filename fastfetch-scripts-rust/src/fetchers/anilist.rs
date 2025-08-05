@@ -44,7 +44,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
     let user = config::get_config_value("AniList").ok_or_else(|| anyhow!("No AniList username"))?;
     let key = format!("al_{}", subparam);
 
-    if let Some(cached) = cache::get_cached(&key, &user) {
+    if let Ok(Some(cached)) = cache::get_cached(&key, &user) {
         return Ok(cached);
     }
 
@@ -89,7 +89,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
     cache_map.insert("chapters", chapters.clone());
 
     for (k, v) in &cache_map {
-        cache::save_cache(&format!("al_{}", k), v, &user);
+        cache::save_cache(&format!("al_{}", k), v, &user)?;
     }
 
     match cache_map.get(subparam) {

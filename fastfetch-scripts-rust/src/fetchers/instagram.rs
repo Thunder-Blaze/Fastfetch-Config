@@ -29,7 +29,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
         .ok_or_else(|| anyhow!("Missing Instagram username. Run with --setup"))?;
 
     let key = format!("ig_{}", subparam);
-    if let Some(cached) = cache::get_cached(&key, &user) {
+    if let Ok(Some(cached)) = cache::get_cached(&key, &user) {
         return Ok(cached);
     }
 
@@ -50,8 +50,8 @@ pub fn fetch(subparam: &str) -> Result<String> {
     let followers = resp.data.user.edge_followed_by.count.to_string();
     let following = resp.data.user.edge_follow.count.to_string();
 
-    cache::save_cache("ig_followers", &followers, &user);
-    cache::save_cache("ig_following", &following, &user);
+    cache::save_cache("ig_followers", &followers, &user)?;
+    cache::save_cache("ig_following", &following, &user)?;
 
     let val = match subparam {
         "followers" => followers,

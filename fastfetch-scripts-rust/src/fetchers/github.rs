@@ -1,7 +1,4 @@
-use crate::{cache, config};
-use anyhow::{Result, anyhow, bail};
-use reqwest::blocking::Client;
-use reqwest::header::USER_AGENT;
+use crate::{cache, config, http, error::{FetchError, Result}};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -17,97 +14,81 @@ struct GHStars {
     forks: u32,
 }
 
-pub fn fetch(subparam: &str) -> Result<String> {
-    let user = config::get_config_value("GitHub")
-        .ok_or_else(|| anyhow!("Missing GitHub username. Run with --setup"))?;
-    let key = format!("gh_{}", subparam);
+const SUPPORTED_PARAMS: &[&str] = &["repos", "followers", "following", "stars", "forks", "prs"];
 
-    if let Some(cached) = cache::get_cached(&key, &user) {
+pub fn fetch(subparam: &str) -> Result<String> {
+    if !SUPPORTED_PARAMS.contains(&subparam) {
+        return Err(FetchError::invalid_param("GitHub", subparam));
+    }
+
+    let username = config::get_config_value("GitHub")
+        .ok_or_else(|| FetchError::config("Missing GitHub username. Run with --setup"))?;
+    
+    let cache_key = format!("gh_{}", subparam);
+
+    if let Ok(Some(cached)) = cache::get_cached(&cache_key, &username) {
         return Ok(cached);
     }
 
-    let client = Client::new();
-
     match subparam {
         "repos" | "followers" | "following" => {
-            let resp: GHUser = client
-                .get(&format!("https://api.github.com/users/{}", user))
-                .header(USER_AGENT, "fastfetch-rs")
-                .send()?
-                .json()?;
+            let url = http::endpoints::GITHUB_USER.url(&[&username]);
+            let response_text = http::get_with_retry(&url)?;
+            let resp: GHUser = serde_json::from_str(&response_text)?;
 
-            let (repos, followers, following) = (
-                Some(resp.public_repos.to_string()),
-                Some(resp.followers.to_string()),
-                Some(resp.following.to_string()),
-            );
+            let data = vec![
+                ("gh_repos".to_string(), resp.public_repos.to_string()),
+                ("gh_followers".to_string(), resp.followers.to_string()),
+                ("gh_following".to_string(), resp.following.to_string()),
+            ];
 
-            if let Some(val) = &repos {
-                cache::save_cache("gh_repos", val, &user);
-            }
-            if let Some(val) = &followers {
-                cache::save_cache("gh_followers", val, &user);
-            }
-            if let Some(val) = &following {
-                cache::save_cache("gh_following", val, &user);
-            }
+            cache::save_multiple_cache(&data, &username)?;
 
-            let val = match subparam {
-                "repos" => repos.unwrap(),
-                "followers" => followers.unwrap(),
-                "following" => following.unwrap(),
+            let value = match subparam {
+                "repos" => resp.public_repos.to_string(),
+                "followers" => resp.followers.to_string(),
+                "following" => resp.following.to_string(),
                 _ => unreachable!(),
             };
 
-            Ok(val)
+            Ok(value)
         }
 
         "stars" | "forks" => {
-            let resp: GHStars = client
-                .get(&format!(
-                    "https://api.github-star-counter.workers.dev/user/{}",
-                    user
-                ))
-                .header(USER_AGENT, "fastfetch-rs")
-                .send()?
-                .json()?;
+            let url = http::endpoints::GITHUB_STARS.url(&[&username]);
+            let response_text = http::get_with_retry(&url)?;
+            let resp: GHStars = serde_json::from_str(&response_text)?;
 
-            let (stars, forks) = (Some(resp.stars.to_string()), Some(resp.forks.to_string()));
+            let data = vec![
+                ("gh_stars".to_string(), resp.stars.to_string()),
+                ("gh_forks".to_string(), resp.forks.to_string()),
+            ];
 
-            if let Some(val) = &stars {
-                cache::save_cache("gh_stars", val, &user);
-            }
-            if let Some(val) = &forks {
-                cache::save_cache("gh_forks", val, &user);
-            }
+            cache::save_multiple_cache(&data, &username)?;
 
-            let val = match subparam {
-                "stars" => stars.unwrap(),
-                "forks" => forks.unwrap(),
+            let value = match subparam {
+                "stars" => resp.stars.to_string(),
+                "forks" => resp.forks.to_string(),
                 _ => unreachable!(),
             };
 
-            Ok(val)
+            Ok(value)
         }
 
         "prs" => {
-            let resp: serde_json::Value = client
-                .get(&format!(
-                    "https://api.github.com/search/issues?q=author:{}+type:pr",
-                    user
-                ))
-                .header(USER_AGENT, "fastfetch-rs")
-                .send()?
-                .json()?;
+            let url = http::endpoints::GITHUB_PRS.url(&[&username]);
+            let response_text = http::get_with_retry(&url)?;
+            let resp: serde_json::Value = serde_json::from_str(&response_text)?;
 
-            if let Some(prs) = resp["total_count"].as_u64().map(|v| v.to_string()) {
-                cache::save_cache("gh_prs", &prs, &user);
-                return Ok(prs);
-            }
+            let prs = resp["total_count"]
+                .as_u64()
+                .ok_or_else(|| FetchError::parse("Failed to extract PR count"))?
+                .to_string();
 
-            bail!("Failed to extract PR count");
+            cache::save_cache("gh_prs", &prs, &username)?;
+            Ok(prs)
         }
 
-        _ => bail!("Invalid GitHub subparam"),
+        _ => unreachable!(), // Already validated above
     }
 }
