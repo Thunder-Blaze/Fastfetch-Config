@@ -31,12 +31,8 @@ pub fn fetch(subparam: &str) -> Result<String> {
     }
 
     let url = http::endpoints::CODEFORCES_USER.url(&[&username]);
-    let response: CFApi = http::HTTP_CLIENT
-        .get(&url)
-        .send()?
-        .error_for_status()
-        .map_err(|e| FetchError::api("Codeforces", e.to_string()))?
-        .json()?;
+    let response_text = http::get_with_retry(&url)?;
+    let response: CFApi = serde_json::from_str(&response_text)?;
 
     if response.status != "OK" {
         return Err(FetchError::api("Codeforces", "API returned non-OK status"));

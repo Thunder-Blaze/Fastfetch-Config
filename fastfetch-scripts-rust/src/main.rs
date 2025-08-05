@@ -2,7 +2,6 @@ mod cache;
 mod config;
 mod constants;
 mod error;
-mod fetcher;
 mod http;
 mod fetchers {
     pub mod anilist;
@@ -87,15 +86,15 @@ fn main() -> Result<()> {
     let output = match platform.as_str() {
         "github" => fetchers::github::fetch(sub)?,
         "codeforces" => fetchers::codeforces::fetch(sub)?,
-        "codechef" => fetchers::codechef::fetch(sub).map_err(error::FetchError::Legacy)?,
-        "leetcode" => fetchers::leetcode::fetch(sub).map_err(error::FetchError::Legacy)?,
+        "codechef" => fetchers::codechef::fetch(sub)?,
+        "leetcode" => fetchers::leetcode::fetch(sub)?,
         "simkl" => {
             let stat_type = sub2.unwrap_or("completed");
-            fetchers::simkl::fetch(sub, &stat_type).map_err(error::FetchError::Legacy)?
+            fetchers::simkl::fetch(sub, &stat_type)?
         }
-        "anilist" => fetchers::anilist::fetch(sub).map_err(error::FetchError::Legacy)?,
-        "myanimelist" => fetchers::myanimelist::fetch(sub).map_err(error::FetchError::Legacy)?,
-        "instagram" => fetchers::instagram::fetch(sub).map_err(error::FetchError::Legacy)?,
+        "anilist" => fetchers::anilist::fetch(sub)?,
+        "myanimelist" => fetchers::myanimelist::fetch(sub)?,
+        "instagram" => fetchers::instagram::fetch(sub)?,
         _ => {
             print_help();
             return Ok(());

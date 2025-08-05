@@ -1,6 +1,4 @@
-use crate::{cache, config};
-use anyhow::{Result, anyhow};
-use reqwest::blocking::Client;
+use crate::{cache, config, http, error::{FetchError, Result}};
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -33,21 +31,17 @@ struct MangaStats {
 }
 
 pub fn fetch(subparam: &str) -> Result<String> {
-    let user = config::get_config_value("MyAnimeList").ok_or_else(|| anyhow!("No MAL username"))?;
+    let user = config::get_config_value("MyAnimeList")
+        .ok_or_else(|| FetchError::config("Missing MyAnimeList username. Run with --setup"))?;
     let key = format!("mal_{}", subparam);
 
     if let Ok(Some(cached)) = cache::get_cached(&key, &user) {
         return Ok(cached);
     }
 
-    let client = Client::new();
-    let resp: MALStats = client
-        .get(&format!(
-            "https://api.jikan.moe/v4/users/{}/statistics",
-            user
-        ))
-        .send()?
-        .json()?;
+    let url = http::endpoints::MAL_STATS.url(&[&user]);
+    let response_text = http::get_with_retry(&url)?;
+    let resp: MALStats = serde_json::from_str(&response_text)?;
 
     let mut cache_map: HashMap<&str, String> = HashMap::new();
 
@@ -75,6 +69,6 @@ pub fn fetch(subparam: &str) -> Result<String> {
     if let Some(val) = cache_map.get(subparam) {
         Ok(val.clone())
     } else {
-        Err(anyhow!("Unknown MAL subparam: {subparam}"))
+        Err(FetchError::invalid_param("MyAnimeList", subparam))
     }
 }

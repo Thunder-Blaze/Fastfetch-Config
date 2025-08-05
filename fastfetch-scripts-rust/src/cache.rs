@@ -9,22 +9,6 @@ use crate::{constants, error::{FetchError, Result}};
 const TTL_SECS: i64 = constants::CACHE_TTL_SECONDS;
 
 #[derive(Debug, Clone)]
-pub struct CacheKey {
-    pub platform: &'static str,
-    pub metric: &'static str,
-}
-
-impl CacheKey {
-    pub fn new(platform: &'static str, metric: &'static str) -> Self {
-        Self { platform, metric }
-    }
-    
-    pub fn as_string(&self) -> String {
-        format!("{}_{}", self.platform, self.metric)
-    }
-}
-
-#[derive(Debug, Clone)]
 pub struct CacheEntry {
     pub key: String,
     pub value: String,
@@ -63,80 +47,6 @@ impl CacheEntry {
     pub fn to_line(&self) -> String {
         format!("{} {} {} {}", self.key, self.value, self.timestamp, self.username)
     }
-}
-
-macro_rules! define_cache_enum {
-    (
-        $( $variant:ident => $key:expr ),*
-        $(,)?
-    ) => {
-        #[derive(Debug, Clone)]
-        pub enum SaveCache {
-            $(
-                $variant(String),
-            )*
-        }
-
-        impl SaveCache {
-            pub fn key(&self) -> &'static str {
-                match self {
-                    $(
-                        SaveCache::$variant(_) => $key,
-                    )*
-                }
-            }
-
-            pub fn value(&self) -> &str {
-                match self {
-                    $(
-                        SaveCache::$variant(v) => v,
-                    )*
-                }
-            }
-
-            pub fn from_parts(key: &str, value: &str) -> Option<Self> {
-                let val = value.to_string();
-                match key {
-                    $(
-                        $key => Some(SaveCache::$variant(val)),
-                    )*
-                    _ => None,
-                }
-            }
-        }
-    };
-}
-
-define_cache_enum! {
-    CfRating => "CfRating",
-    CfMaxRating => "CfMaxRating",
-    CcRating => "CcRating",
-    CcMaxRating => "CcMaxRating",
-    LeetCodeRating => "LeetCodeRating",
-    LeetCodeRank => "LeetCodeRank",
-    GitHubRepos => "GitHubRepos",
-    GitHubFollowers => "GitHubFollowers",
-    GitHubFollowing => "GitHubFollowing",
-    GitHubPRs => "GitHubPRs",
-    GitHubStars => "GitHubStars",
-    GitHubForks => "GitHubForks",
-    AniListAnimeCount => "AniListAnimeCount",
-    AniListEpisodes => "AniListEpisodes",
-    AniListMangaCount => "AniListMangaCount",
-    AniListChapters => "AniListChapters",
-    SimklTotalHours => "SimklTotalHours",
-    SimklMoviesCompleted => "SimklMoviesCompleted",
-    SimklMoviesHours => "SimklMoviesHours",
-    SimklAnimeCompleted => "SimklAnimeCompleted",
-    SimklAnimeHours => "SimklAnimeHours",
-    SimklTVCompleted => "SimklTVCompleted",
-    SimklTVHours => "SimklTVHours",
-    MALAnimeCount => "MALAnimeCount",
-    MALAniEpisodes => "MALAniEpisodes",
-    MALMangaTotal => "MALMangaTotal",
-    MALMangaChapters => "MALMangaChapters",
-    InstagramFollowers => "InstagramFollowers",
-    InstagramFollowing => "InstagramFollowing",
 }
 
 fn cache_path() -> Result<PathBuf> {

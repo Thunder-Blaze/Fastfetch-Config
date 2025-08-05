@@ -54,17 +54,6 @@ impl Config {
         
         Ok(())
     }
-    
-    pub fn validate_platform(&self, platform: &str) -> Result<String> {
-        let username = self.get(platform)
-            .ok_or_else(|| FetchError::config(format!("Missing {} username. Run with --setup", platform)))?;
-        
-        if username.trim().is_empty() {
-            return Err(FetchError::config(format!("{} username is empty. Run with --setup", platform)));
-        }
-        
-        Ok(username.clone())
-    }
 }
 
 /// Path to the config file

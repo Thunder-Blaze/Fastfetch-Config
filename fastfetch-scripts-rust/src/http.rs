@@ -22,7 +22,6 @@ pub static HTTP_CLIENT: Lazy<Client> = Lazy::new(|| {
 pub struct ApiEndpoint {
     pub base_url: &'static str,
     pub path_template: &'static str,
-    pub requires_auth: bool,
 }
 
 impl ApiEndpoint {
@@ -41,61 +40,51 @@ pub mod endpoints {
     pub const GITHUB_USER: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.github.com",
         path_template: "/users/{0}",
-        requires_auth: false,
     };
     
     pub const GITHUB_STARS: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.github-star-counter.workers.dev",
         path_template: "/user/{0}",
-        requires_auth: false,
     };
     
     pub const GITHUB_PRS: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.github.com",
         path_template: "/search/issues?q=author:{0}+type:pr",
-        requires_auth: false,
     };
     
     pub const CODEFORCES_USER: ApiEndpoint = ApiEndpoint {
         base_url: "https://codeforces.com",
         path_template: "/api/user.info?handles={0}",
-        requires_auth: false,
     };
     
     pub const CODECHEF_USER: ApiEndpoint = ApiEndpoint {
         base_url: "https://www.codechef.com",
         path_template: "/users/{0}",
-        requires_auth: false,
     };
     
     pub const LEETCODE_USER: ApiEndpoint = ApiEndpoint {
         base_url: "https://leetcode-stats-api.herokuapp.com",
         path_template: "/{0}",
-        requires_auth: false,
     };
     
     pub const ANILIST_GRAPHQL: ApiEndpoint = ApiEndpoint {
         base_url: "https://graphql.anilist.co",
         path_template: "",
-        requires_auth: false,
     };
     
     pub const SIMKL_STATS: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.simkl.com",
         path_template: "/users/{0}/stats",
-        requires_auth: false,
     };
     
     pub const MAL_STATS: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.jikan.moe",
         path_template: "/v4/users/{0}/statistics",
-        requires_auth: false,
     };
     
     pub const INSTAGRAM_USER: ApiEndpoint = ApiEndpoint {
         base_url: "https://i.instagram.com",
         path_template: "/api/v1/users/web_profile_info/?username={0}",
-        requires_auth: false,
     };
 }
 

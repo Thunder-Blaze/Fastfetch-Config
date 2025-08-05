@@ -1,6 +1,4 @@
-use crate::{cache, config};
-use anyhow::{Result, anyhow};
-use reqwest::blocking::Client;
+use crate::{cache, config, http, error::{FetchError, Result}};
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -41,7 +39,8 @@ struct MangaStats {
 }
 
 pub fn fetch(subparam: &str) -> Result<String> {
-    let user = config::get_config_value("AniList").ok_or_else(|| anyhow!("No AniList username"))?;
+    let user = config::get_config_value("AniList")
+        .ok_or_else(|| FetchError::config("Missing AniList username. Run with --setup"))?;
     let key = format!("al_{}", subparam);
 
     if let Ok(Some(cached)) = cache::get_cached(&key, &user) {
@@ -70,12 +69,8 @@ pub fn fetch(subparam: &str) -> Result<String> {
         "variables": { "name": user }
     });
 
-    let client = Client::new();
-    let resp: AniListResponse = client
-        .post("https://graphql.anilist.co")
-        .json(&payload)
-        .send()?
-        .json()?;
+    let response_text = http::post_with_retry(&http::endpoints::ANILIST_GRAPHQL.base_url, &payload.to_string())?;
+    let resp: AniListResponse = serde_json::from_str(&response_text)?;
 
     let anime_count = resp.data.user.statistics.anime.count.to_string();
     let episodes = resp.data.user.statistics.anime.episodes_watched.to_string();
@@ -94,6 +89,6 @@ pub fn fetch(subparam: &str) -> Result<String> {
 
     match cache_map.get(subparam) {
         Some(val) => Ok(val.clone()),
-        None => Err(anyhow!("Unknown AniList subparam: {subparam}")),
+        None => Err(FetchError::invalid_param("AniList", subparam)),
     }
 }

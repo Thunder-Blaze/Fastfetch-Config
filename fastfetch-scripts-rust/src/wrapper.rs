@@ -4,12 +4,7 @@ use crate::fetchers::{
 use crate::{constants, error::{FetchError, Result}};
 
 // Helper function to safely fetch values, returning empty string on any error
-fn safe_fetch<T>(result: anyhow::Result<T>) -> Option<T> {
-    result.ok()
-}
-
-// Helper for new error type fetchers
-fn safe_fetch_new<T>(result: crate::error::Result<T>) -> Option<T> {
+fn safe_fetch<T>(result: crate::error::Result<T>) -> Option<T> {
     result.ok()
 }
 
@@ -69,7 +64,7 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
 
     match platform {
         "codeforces" => {
-            match (safe_fetch_new(codeforces::fetch("rating")), safe_fetch_new(codeforces::fetch("maxrating"))) {
+            match (safe_fetch(codeforces::fetch("rating")), safe_fetch(codeforces::fetch("maxrating"))) {
                 (Some(rating), Some(max)) => Ok(format!(
                     "{} {} {}",
                     rating,
@@ -94,10 +89,10 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
 
         "github" => {
             match (
-                safe_fetch_new(github::fetch("repos")),
-                safe_fetch_new(github::fetch("prs")),
-                safe_fetch_new(github::fetch("stars")),
-                safe_fetch_new(github::fetch("followers")),
+                safe_fetch(github::fetch("repos")),
+                safe_fetch(github::fetch("prs")),
+                safe_fetch(github::fetch("stars")),
+                safe_fetch(github::fetch("followers")),
             ) {
                 (Some(repos), Some(prs), Some(stars), Some(followers)) => Ok(format!(
                     "{} {} {} {} {} {} {} {}",

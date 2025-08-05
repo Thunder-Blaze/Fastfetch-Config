@@ -1,6 +1,4 @@
-use crate::{cache, config};
-use anyhow::{Result, anyhow, bail};
-use reqwest::blocking::Client;
+use crate::{cache, config, http, error::{FetchError, Result}};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -10,7 +8,7 @@ struct LCUser {
 
 pub fn fetch(subparam: &str) -> Result<String> {
     let user = config::get_config_value("LeetCode")
-        .ok_or_else(|| anyhow!("Missing LeetCode username. Run with --setup"))?;
+        .ok_or_else(|| FetchError::config("Missing LeetCode username. Run with --setup"))?;
 
     let key = format!("lc_{}", subparam);
     if let Ok(Some(cached)) = cache::get_cached(&key, &user) {
@@ -19,23 +17,18 @@ pub fn fetch(subparam: &str) -> Result<String> {
 
     match subparam {
         "rank" => {
-            let client = Client::new();
-            let resp = client
-                .get(&format!(
-                    "https://leetcode-stats-api.herokuapp.com/{}",
-                    user
-                ))
-                .send()?
-                .json::<LCUser>()?;
+            let url = http::endpoints::LEETCODE_USER.url(&[&user]);
+            let response_text = http::get_with_retry(&url)?;
+            let resp: LCUser = serde_json::from_str(&response_text)?;
 
             if let Some(ranking) = resp.ranking {
                 let rank_str = ranking.to_string();
                 cache::save_cache(&key, &rank_str, &user)?;
                 Ok(rank_str)
             } else {
-                bail!("Could not fetch LeetCode Rank");
+                Err(FetchError::api("LeetCode", "Could not fetch LeetCode Rank".to_string()))
             }
         }
-        _ => bail!("Invalid LeetCode subparam"),
+        _ => Err(FetchError::invalid_param("LeetCode", subparam)),
     }
 }
