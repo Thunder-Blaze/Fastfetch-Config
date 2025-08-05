@@ -1,5 +1,5 @@
 [package]
-name = "fastfetch-scripts-rs"
+name = "tsukiyomi-fetch"
 version = "0.1.0"
 edition = "2024"
 

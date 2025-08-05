@@ -36,8 +36,14 @@ fn main() -> Result<()> {
         print_help();
         return Ok(());
     }
-    if args.len() == 3 && args[1] == "wrapper" {
-        let output = wrapper::run_wrapper(&args[2])?;
+    if args.len() >= 3 && args[1] == "wrapper" {
+        let Some(platform) = args.get(2) else {
+            print_help();
+            return Ok(());
+        };
+
+        let extra_args = args[3..].to_vec(); // collect remaining args
+        let output = wrapper::run_wrapper(platform, &extra_args)?;
         println!("{output}");
         return Ok(());
     }

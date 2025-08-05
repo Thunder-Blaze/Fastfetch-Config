@@ -5,7 +5,7 @@ use std::path::PathBuf;
 
 /// Path to the config file
 fn config_path() -> Option<PathBuf> {
-    Some(dirs::home_dir()?.join(".config/fastfetch/fastfetch-scripts.conf"))
+    Some(dirs::home_dir()?.join(".config/fastfetch/tsukiyomi-fetch.conf"))
 }
 
 /// Get a config value by key (e.g. "GitHub" => "username")
