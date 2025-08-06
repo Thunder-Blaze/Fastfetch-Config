@@ -1,177 +1,387 @@
-# ⚡ Fastfetch Config
+<div align="center">
+  
+# ⚡ Tsukiyomi Fetch
 
-Custom configuration and statistics script for [Fastfetch](https://github.com/fastfetch-cli/fastfetch), designed to display personalized system and online profile stats in a clean and minimal way.
+*A personalized Fastfetch configuration with dynamic online statistics*
 
-<img src="assets/Preview3.webp" width="100%" alt="Fastfetch Preview"/>
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/Thunder-Blaze/Tsukiyomi-Fetch?style=social)](https://github.com/Thunder-Blaze/Tsukiyomi-Fetch/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/Thunder-Blaze/Tsukiyomi-Fetch?style=social)](https://github.com/Thunder-Blaze/Tsukiyomi-Fetch/network/members)
 
----
+Custom configuration and statistics script for [Fastfetch](https://github.com/fastfetch-cli/fastfetch), designed to display personalized system and online profile stats in a clean and minimal way with beautiful anime-themed visuals.
 
-## 🎯 Features
+<img src="assets/Preview4.webp" width="80%" alt="Fastfetch Preview"/>
 
-- 💻 Minimal and clean Fastfetch configuration with lots of high quality anime images.
-- 📊 Modular `tsukiyomi-fetch` script to show dynamic stats from:
-  - ✅ Codeforces (current rating, maximum rating)
-  - ✅ CodeChef (current rating, maximum rating)
-  - ✅ GitHub (public repos, PRs, stars, forks, following, followers)
-  - ✅ AniList (anime count, episodes watched, manga count, manga read)
-  - ✅ Simkl (total watch hours, completed anime, anime watch hours, completed movies, movies watch hours, completed tv, tv watch hours)
-  - ✅ MyAnimeLisrt (anime count, episodes watched, manga count, manga read)
-  - ✅ LeetCode (current rank)
-  - ✅ Instagram (followers, following)
-- ⏱️ Caching system to avoid repeated API calls (1-day TTL).
-- 📦 Easy Installation and Configuration.
+</div>
 
 ---
 
-## 📁 Directory Structure
+## What is Tsukiyomi Fetch?
 
-```bash
+Tsukiyomi Fetch transforms your terminal into a beautiful and informative dashboard that displays:
+
+- **Visual Appeal**: 50+ high-quality anime images with clean, minimal layouts
+- **Live Statistics**: Real-time stats from your favorite coding and social platforms
+- **Performance**: Rust-powered backend with intelligent caching (1-day TTL)
+- **Customization**: Easy configuration and modular design
+- **Simplicity**: One-command installation and setup
+
+## Features
+
+- **Beautiful Interface**: Minimal and clean Fastfetch configuration with 50+ high-quality anime images
+- **Multi-Platform Stats**: Dynamic statistics from 8+ platforms
+- **Performance Optimized**: 
+  - Rust-powered backend for blazing fast execution
+  - Intelligent caching system (24-hour TTL)
+  - Asynchronous API calls for minimal latency
+- **Easy Setup**: 
+  - One-command installation script
+  - Automated configuration management
+  - Cross-platform compatibility (Linux focus)
+- **Modular Design**: 
+  - Add/remove platforms easily
+  - Customizable display formats
+  - Extensible architecture
+
+---
+
+## Project Structure
+
+```
 Tsukiyomi-Fetch/
-├── assets/
-│   ├── Preview1.png            # Preview image (red theme)
-│   └── Preview2.png            # Preview image (green theme)
-├── fastfetch/
-│   ├── pngs/                   # Folder Containing about 50 high quality images for fastfetch
-│   ├── config.jsonc            # Main Fastfetch config
-│   └── tsukiyomi-fetch         # Script to format, fetch and cache stats (written in Rust)
-├── tsukiyomi-fetch-rust/       # Source code for the Rust script
-│   ├── Cargo.toml              # Rust dependencies
-│   └── src/
-│       ├── fetchers/           # Fetchers for various stats
-│       ├── config.rs           # Configuration handling for the Rust script
-│       ├── main.rs             # Main entry point for the Rust script
-│       ├── cache.rs            # Caching Functions for the Rust script
-│       └── wrapper.rs          # Functions format stats for the Rust script
-├── tsukiyomi-fetch-bash/       # Script to format, fetch and cache stats (written in Bash)
-│   ├── fastfetch-scripts.sh        # Bash script to fetch and format stats
-│   ├── fastfetch-wrapper.sh        # Bash wrapper script for fetching stats
-├── installer.sh            # Installer for Easy Installation
-├── uninstaller.sh          # Uninstaller for Easy Installation
-└── README.md               # Readme For the Project
+├── assets/                        # Preview images and documentation media
+│   ├── Preview1.webp                 # Red theme preview
+│   ├── Preview2.webp                 # Green theme preview
+│   └── Preview3.webp                 # Main preview image
+├── fastfetch/                      # Core Fastfetch configuration
+│   ├── pngs/                       # 50+ high-quality anime images
+│   ├── config.jsonc               # Primary Fastfetch configuration
+│   ├── config2.jsonc              # Alternative configuration
+│   └── tsukiyomi-fetch            # Compiled Rust binary
+├── tsukiyomi-fetch-rust/           # Rust implementation (current)
+│   ├── Cargo.toml                  # Rust dependencies and metadata
+│   ├── Cargo.lock                  # Locked dependency versions
+│   └── src/                        # Source code
+│       ├── fetchers/               # Platform-specific API fetchers
+│       │   ├── anilist.rs            # AniList API integration
+│       │   ├── codechef.rs           # CodeChef statistics
+│       │   ├── codeforces.rs         # Codeforces rating system
+│       │   ├── github.rs             # GitHub profile stats
+│       │   ├── instagram.rs          # Instagram follower data
+│       │   ├── leetcode.rs           # LeetCode ranking
+│       │   ├── myanimelist.rs        # MyAnimeList integration
+│       │   └── simkl.rs              # Simkl watch time statistics
+│       ├──  config.rs               # Configuration file handler
+│       ├── cache.rs                # Intelligent caching system
+│       ├── http.rs                 # HTTP client and utilities
+│       ├── error.rs                # Error handling and types
+│       ├── wrapper.rs              # Output formatting utilities
+│       └── main.rs                 # Application entry point
+├── tsukiyomi-fetch-bash/           # Legacy Bash implementation (deprecated)
+│   ├── fastfetch-scripts.sh          # Core statistics fetcher
+│   └── fastfetch-wrapper.sh          # Bash wrapper utilities
+├── installer.sh                   # Automated installation script
+├── uninstaller.sh                # Clean removal script
+└── README.md                      # This comprehensive guide
 ```
+
+### Key Components
+
+| Component | Language | Status | Purpose |
+|-----------|----------|--------|---------|
+| **tsukiyomi-fetch** | Rust | Active | High-performance statistics fetcher with caching |
+| **fastfetch config** | Plain Text | Active | Beautiful terminal display configuration |
+| **Bash scripts** | Bash | Deprecated | Legacy implementation (not recommended) |
 
 ---
 
-## 🚀 Setup
+## 🚀 Quick Start
 
-### 1. Install Dependencies
+### Prerequisites
+- ***`Fastfetch`***
 
-- [Fastfetch](https://github.com/fastfetch-cli/fastfetch)
-- `curl`, `jq`, `awk`, and `bash` (already available on most Linux distros)
-```bash
-# For Arch Users Like Me
-sudo pacman -S fastfetch
-```
+Note - `Curl` and `jq` are required for older bash scripts, but the Rust implementation uses its own HTTP client.
 
-### 2. Clone this repo and Install
+### Installation
+
+**Option 1: Automated Installation (Recommended)**
 
 ```bash
-git clone https://github.com/Thunder-Blaze/Fastfetch-Config /tmp/fastfetch
+# Clone and install in one go
+git clone https://github.com/Thunder-Blaze/Tsukiyomi-Fetch /tmp/fastfetch
 cd /tmp/fastfetch
 chmod +x ./installer.sh
 ./installer.sh
 ```
 
-### 3. Make script executable
+**Option 2: Manual Installation**
 
 ```bash
-# Just In Case
+# Clone the repository
+git clone https://github.com/Thunder-Blaze/Tsukiyomi-Fetch /tmp/Tsukiyomi-Fetch
+
+# Copy configuration files
+cp -r /tmp/Tsukiyomi-Fetch/fastfetch/* ~/.config/fastfetch/
+
+# Make scripts executable
+chmod +x ~/.config/fastfetch/tsukiyomi-fetch
+
+# Setup the config file
+~/.config/fastfetch/tsukiyomi-fetch --setup
+```
+
+### First Run
+
+After installation, simply run:
+
+```bash
+fastfetch
+```
+
+---
+
+## 🔧 Configuration & Usage
+
+### Configuration File
+
+The configuration is stored at `~/.config/fastfetch/tsukiyomi-fetch.conf` and is generated on running `--setup`:
+
+```ini
+GitHub=your.username
+Instagram=your.username
+Codeforces=your_handle
+CodeChef=your_handle
+LeetCode=your_username
+AniList=YourUsername
+MyAnimeList=YourUsername
+Simkl=1234567  # Your Simkl User ID (see note below)
+```
+
+#### 📝 Getting Your Simkl User ID
+- Visit `simkl.com/profile`, the URL becomes `simkl.com/XXXXXXX/` where XXXXXXX is your user ID.
+
+### 🧠 Available Commands
+
+The Rust-powered `tsukiyomi-fetch` script supports the following commands:
+
+#### Wrapper Commands (Recommended)
+These commands fetch and format common available stats for a platform:
+
+```bash
+~/.config/fastfetch/tsukiyomi-fetch wrapper github      # All GitHub stats
+
+# Some Available Customizations to Wrappers are
+~/.config/fastfetch/tsukiyomi-fetch wrapper github --color green (change icon color to green color corresponding to the green keycolor in fastfetch config)
+~/.config/fastfetch/tsukiyomi-fetch wrapper github --icons a --icons b (change default icon glyphs [1st one becomes a, 2nd one becomes b])
+```
+
+#### Individual Stat Commands
+
+<details>
+  
+| Command | Output | Description |
+|---------|--------|-------------|
+| `codeforces rating` | `1547` | Current Codeforces rating |
+| `codeforces maxrating` | `1698` | Highest achieved rating |
+| `codechef rating` | `1834` | Current CodeChef rating |
+| `codechef maxrating` | `1902` | Peak CodeChef rating |
+| `leetcode rating` | `1654` | Current LeetCode rating |
+| `leetcode rank` | `54231` | Global LeetCode ranking |
+| `github repos` | `42` | Public repository count |
+| `github followers` | `156` | GitHub followers |
+| `github following` | `87` | Users you're following |
+| `github prs` | `234` | Total pull requests |
+| `github stars` | `1247` | Stars across all repos |
+| `github forks` | `89` | Total repository forks |
+| `anilist anime_count` | `387` | Anime entries watched |
+| `anilist episodes` | `4823` | Total episodes viewed |
+| `anilist manga_count` | `156` | Manga entries read |
+| `anilist chapters` | `2847` | Total chapters read |
+| `simkl totalhours` | `1247` | Total watch time (hours) |
+| `simkl anime completed` | `234` | Completed anime count |
+| `simkl anime hours` | `567` | Anime watch hours |
+| `myanimelist anime_count` | `298` | MAL anime entries |
+| `myanimelist anime_episodes` | `3456` | MAL episodes watched |
+| `instagram followers` | `2847` | Instagram followers |
+| `instagram following` | `456` | Instagram following |
+
+</details>
+
+### 🚀 Usage Examples
+
+```bash
+# Display GitHub repository count in your Fastfetch config
+~/.config/fastfetch/tsukiyomi-fetch github repos
+
+# Show current Codeforces rating
+~/.config/fastfetch/tsukiyomi-fetch codeforces rating
+
+# Get all AniList statistics at once
+~/.config/fastfetch/tsukiyomi-fetch wrapper anilist
+```
+
+### ⚡ Performance & Caching
+
+- **Cache Location**: `~/.cache/fastfetch/tsukiyomi.cache`
+- **Cache Duration**: 24 hours (86,400 seconds)
+- **Auto-Invalidation**: Cache refreshes when TTL expires or usernames change
+- **Performance**: Rust implementation provides near-instantaneous responses for cached data
+
+---
+
+## 🖼️ Gallery
+
+<div align="center">
+
+### Preview Gallery
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/Preview1.webp" width="400" alt="Red Theme Preview"/>
+    </td>
+    <td align="center">
+      <img src="assets/Preview2.webp" width="400" alt="Green Theme Preview"/>
+    </td>
+  </tr>
+</table>
+
+### Main Preview
+<img src="assets/Preview3.webp" width="80%" alt="Main Fastfetch Preview"/>
+
+</div>
+
+---
+
+## 🛠️ Troubleshooting
+
+<details>
+<summary> Common Issues & Solutions</summary>
+
+### Script Not Executable
+```bash
 chmod +x ~/.config/fastfetch/tsukiyomi-fetch
 ```
 
-### 4. Update your Fastfetch config
-
-> You can modify the config yourself to make it fit according to your needs
-
----
-
-## 🧠 Supported Stats
-
-> These Commands are For the Rust Script `tsukiyomi-fetch`, you can also use the Bash Script, but it is not recommended as it is deprecated and will not receive any updates.
-
-| Wrapping Commands         |
-|---------------------------|
-| wrapper anilist           |
-| wrapper github            |
-| wrapper codechef          |
-| wrapper codeforces        |
-| wrapper myanimelist       |
-| wrapper simkl             |
-| wrapper leetcode          |
-| wrapper instagram         |
-
-
-| Command                         | Description                     |
-|---------------------------------|---------------------------------|
-| `codeforces rating`             | Codeforces Current Rating       |
-| `codeforces maxrating`          | Codeforces Max Rating           |
-| `codechef rating`               | CodeChef Current Rating         |
-| `codechef maxrating`            | CodeChef Max Rating             |
-| `leetcode rating`               | LeetCode Current Rating         |
-| `github repos`                  | GitHub public repo count        |
-| `github followers`              | GitHub User Followers           |
-| `github follwing`               | GitHub User Following           |
-| `github prs`                    | Github Total PRs                |
-| `github stars`                  | GitHub User Repository Stars    |
-| `github forks`                  | Github User Repository Forks    |
-| `anilist anime_count`           | AniList Anime Watched           |
-| `anilist episodes`              | AniList Episodes Watched        |
-| `anilist manga_count`           | AniList Manga Read              |
-| `anilist chapters`              | AniList Chapters Read           |
-| `simkl totalhours`              | Simkl Total Watch Hours         |
-| `simkl movies completed`        | Simkl Movie Completed Count     |
-| `simkl movies hours`            | Simkl Movie Watch Hours         |
-| `simkl anime completed`         | Simkl Anime Completed Count     |
-| `simkl anime hours`             | Simkl Anime Watch Hours         |
-| `simkl tv completed`            | Simkl TV Series Completed Count |
-| `simkl tv hours`                | Simkl TV Series Watch Hours     |
-| `myanimelist anime_count`       | MyAnimeList Anime Watched       |
-| `myanimelist anime_episodes`    | MyAnimeList Episodes Watched    |
-| `myanimelist manga_total`       | MyAnimeList Manga Read          |
-| `myanimelist manga_chapters`    | MyAnimeList Chapters Read       |
-| `instagram followers`           | Instagram User Followers        |
-| `instagram following`           | Instagram User Following        |
-| `leetcode rank`                 | LeetCode Current Rank           |
-
----
-
-## ⚙️ Configuration
-
-### `~/.config/fastfetch/fastfetch_scripts.conf`
-
-You can create a config file to store your usernames:
-
+### Cache Issues
 ```bash
-GitHub=Thunder-Blaze
-AniList=ThunderBlaze
-...
+# Clear cache manually
+rm -rf ~/.cache/fastfetch/tsukiyomi.cache
 ```
 
-> Note - For Simkl UserID, visit `https://simkl.com/profile`, the URL will change to `https://simkl.com/XXXXXXX/`, this XXXXXXX is your Simkl User Id 
+### API Rate Limiting
+- The 24-hour cache prevents hitting API rate limits
+- If you encounter issues, wait for cache to expire or clear it manually
 
-### Caching
+### Configuration Not Loading
+- Ensure `~/.config/fastfetch/fastfetch_scripts.conf` exists
+- Check file permissions: `chmod 644 ~/.config/fastfetch/fastfetch_scripts.conf`
+- Verify username formats match platform requirements
 
-- Cache stored in `~/.config/fastfetch/.cache`
-- TTL: 24 * 60 * 60 seconds (1 day)
-- Automatically invalidated when TTL expires or username changes
-
----
-
-## 📸 Screenshots
-
-<p align="center">
-  <img src="assets/Preview1.webp" width="100%" alt="Fastfetch Preview 1"/>
-</p>
-<p align="center">
-  <img src="assets/Preview2.webp" width="100%" alt="Fastfetch Preview 2"/>
-</p>
+</details>
 
 ---
 
-## 🤝 Contributions
+## 🚀 Advanced Usage
 
-Contributions, improvements, or stat suggestions are welcome! Feel free to open issues or PRs.
+### Custom Fastfetch Integration
 
-Special Thanks to 
-[Zero](https://github.com/GraveEaterMadison) (instagram fetcher)
-[Insane](https://github.com/In-Saiyan) (codechef fetcher)
+Add the following to your `~/.config/fastfetch/config.jsonc`:
+
+```jsonc
+{
+  "modules": [
+    // ...existing modules...
+    {
+      "type": "custom",
+      "key": "GitHub Repos",
+      "command": "~/.config/fastfetch/tsukiyomi-fetch github repos"
+    },
+    {
+      "type": "custom", 
+      "key": "Codeforces",
+      "command": "~/.config/fastfetch/tsukiyomi-fetch codeforces rating"
+    }
+    // Add more as needed...
+  ]
+}
+```
+
+### Building from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/Thunder-Blaze/Tsukiyomi-Fetch
+cd Tsukiyomi-Fetch/tsukiyomi-fetch-rust
+
+# Build the Rust binary
+cargo build --release
+
+# Copy to Fastfetch directory
+cp target/release/tsukiyomi-fetch ~/.config/fastfetch/
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+### 🎯 Areas for Contribution
+
+- **New Platform Integrations**: Add support for more APIs (Discord, Steam, etc.)
+- **Visual Improvements**: Create new themes and image collections
+- **Bug Fixes**: Report and fix issues
+- **Documentation**: Improve guides and examples
+- **Performance**: Optimize caching and API calls
+
+### 📝 Development Setup
+
+```bash
+# Fork the repository on GitHub
+git clone https://github.com/YOUR-USERNAME/Tsukiyomi-Fetch
+cd Tsukiyomi-Fetch
+
+# Create a feature branch
+git checkout -b feature/new-platform-support
+
+# Make your changes
+# ...
+
+# Test your changes
+cargo test  # For Rust changes
+./installer.sh  # Test installation
+
+# Commit and push
+git add .
+git commit -m "Add support for XYZ platform"
+git push origin feature/new-platform-support
+
+# Create a Pull Request on GitHub
+```
+
+---
+
+## 🌟 Support
+
+If you find this project helpful, please consider:
+
+- **Star this repository** to show your support
+- **Report bugs** via GitHub Issues  
+- **Suggest features** for future development
+- **Contribute** to the codebase
+- **Share** with the community
+
+Special thanks to:
+- [**Zero**](https://github.com/GraveEaterMadison) - Instagram fetcher implementation
+- [**Insane**](https://github.com/In-Saiyan) - CodeChef fetcher implementation
+
+<div align="center">
+
+---
+
+**Made with ❤️ by [Thunder-Blaze](https://github.com/Thunder-Blaze)**
+
+*Transform your terminal into a beautiful, informative dashboard*
+
+</div>
