@@ -16,9 +16,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Cd
-      run: cd tsukiyomi-fetch-rust
     - name: Build
       run: cargo build --verbose
+      working-directory: tsukiyomi-fetch-rust
     - name: Run tests
       run: cargo test --verbose
+      working-directory: tsukiyomi-fetch-rust
