@@ -1,16 +1,16 @@
 use once_cell::sync::Lazy;
 use reqwest::blocking::Client;
 use reqwest::header::{HeaderMap, HeaderValue, USER_AGENT};
-use std::time::Duration;
 use std::thread;
+use std::time::Duration;
 
+use crate::constants::{APP_USER_AGENT, HTTP_TIMEOUT_SECONDS, MAX_RETRIES};
 use crate::error::{FetchError, Result};
-use crate::constants::{HTTP_TIMEOUT_SECONDS, MAX_RETRIES, APP_USER_AGENT};
 
 pub static HTTP_CLIENT: Lazy<Client> = Lazy::new(|| {
     let mut headers = HeaderMap::new();
     headers.insert(USER_AGENT, HeaderValue::from_static(APP_USER_AGENT));
-    
+
     Client::builder()
         .timeout(Duration::from_secs(HTTP_TIMEOUT_SECONDS))
         .default_headers(headers)
@@ -36,52 +36,52 @@ impl ApiEndpoint {
 
 pub mod endpoints {
     use super::ApiEndpoint;
-    
+
     pub const GITHUB_USER: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.github.com",
         path_template: "/users/{0}",
     };
-    
+
     pub const GITHUB_STARS: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.github-star-counter.workers.dev",
         path_template: "/user/{0}",
     };
-    
+
     pub const GITHUB_PRS: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.github.com",
         path_template: "/search/issues?q=author:{0}+type:pr",
     };
-    
+
     pub const CODEFORCES_USER: ApiEndpoint = ApiEndpoint {
         base_url: "https://codeforces.com",
         path_template: "/api/user.info?handles={0}",
     };
-    
+
     pub const CODECHEF_USER: ApiEndpoint = ApiEndpoint {
         base_url: "https://www.codechef.com",
         path_template: "/users/{0}",
     };
-    
+
     pub const LEETCODE_USER: ApiEndpoint = ApiEndpoint {
         base_url: "https://leetcode-stats-api.herokuapp.com",
         path_template: "/{0}",
     };
-    
+
     pub const ANILIST_GRAPHQL: ApiEndpoint = ApiEndpoint {
         base_url: "https://graphql.anilist.co",
         path_template: "",
     };
-    
+
     pub const SIMKL_STATS: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.simkl.com",
         path_template: "/users/{0}/stats",
     };
-    
+
     pub const MAL_STATS: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.jikan.moe",
         path_template: "/v4/users/{0}/statistics",
     };
-    
+
     pub const INSTAGRAM_USER: ApiEndpoint = ApiEndpoint {
         base_url: "https://i.instagram.com",
         path_template: "/api/v1/users/web_profile_info/?username={0}",
@@ -135,10 +135,12 @@ pub fn post_with_retry(url: &str, body: &str) -> Result<String> {
     let mut delay = Duration::from_millis(100);
 
     loop {
-        match HTTP_CLIENT.post(url)
+        match HTTP_CLIENT
+            .post(url)
             .header("Content-Type", "application/json")
             .body(body.to_string())
-            .send() {
+            .send()
+        {
             Ok(response) => {
                 if response.status().is_success() {
                     match response.text() {

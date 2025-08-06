@@ -1,4 +1,8 @@
-use crate::{cache, config, http, error::{FetchError, Result}};
+use crate::{
+    cache, config,
+    error::{FetchError, Result},
+    http,
+};
 use serde::Deserialize;
 use std::collections::HashMap;
 

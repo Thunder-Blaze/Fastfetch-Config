@@ -1,10 +1,13 @@
+use crate::{
+    constants,
+    error::{FetchError, Result},
+};
 use chrono::Utc;
 use std::{
     fs::{self, File},
     io::{BufRead, BufReader, Write},
     path::PathBuf,
 };
-use crate::{constants, error::{FetchError, Result}};
 
 const TTL_SECS: i64 = constants::CACHE_TTL_SECONDS;
 
@@ -25,7 +28,7 @@ impl CacheEntry {
             username,
         }
     }
-    
+
     pub fn from_line(line: &str) -> Option<Self> {
         let parts: Vec<&str> = line.split_whitespace().collect();
         if parts.len() == 4 {
@@ -39,19 +42,22 @@ impl CacheEntry {
             None
         }
     }
-    
+
     pub fn is_valid(&self) -> bool {
         Utc::now().timestamp() - self.timestamp < TTL_SECS
     }
-    
+
     pub fn to_line(&self) -> String {
-        format!("{} {} {} {}", self.key, self.value, self.timestamp, self.username)
+        format!(
+            "{} {} {} {}",
+            self.key, self.value, self.timestamp, self.username
+        )
     }
 }
 
 fn cache_path() -> Result<PathBuf> {
-    let home = dirs::home_dir()
-        .ok_or_else(|| FetchError::cache("Could not determine home directory"))?;
+    let home =
+        dirs::home_dir().ok_or_else(|| FetchError::cache("Could not determine home directory"))?;
     Ok(home.join(constants::CACHE_DIR).join(constants::CACHE_FILE))
 }
 
@@ -70,7 +76,7 @@ pub fn get_cached(key: &str, username: &str) -> Result<Option<String>> {
         Ok(f) => f,
         Err(_) => return Ok(None), // Cache file doesn't exist yet
     };
-    
+
     let reader = BufReader::new(file);
     let mut lines: Vec<String> = reader.lines().collect::<std::io::Result<_>>()?;
     lines.reverse(); // Check most recent entries first
@@ -89,7 +95,7 @@ pub fn get_cached(key: &str, username: &str) -> Result<Option<String>> {
             }
         }
     }
-    
+
     Ok(None)
 }
 
@@ -119,19 +125,19 @@ pub fn save_cache(key: &str, value: &str, username: &str) -> Result<()> {
 
     let mut file = File::create(&path)
         .map_err(|e| FetchError::cache(format!("Failed to create cache file: {}", e)))?;
-    
+
     for line in existing_lines {
         writeln!(file, "{}", line)?;
     }
     writeln!(file, "{}", new_entry.to_line())?;
-    
+
     Ok(())
 }
 
 pub fn save_multiple_cache(entries: &[(String, String)], username: &str) -> Result<()> {
     ensure_cache_dir()?;
     let path = cache_path()?;
-    
+
     let existing_lines = if path.exists() {
         let file = File::open(&path)?;
         BufReader::new(file)
@@ -153,15 +159,15 @@ pub fn save_multiple_cache(entries: &[(String, String)], username: &str) -> Resu
 
     let mut file = File::create(&path)
         .map_err(|e| FetchError::cache(format!("Failed to create cache file: {}", e)))?;
-    
+
     for line in existing_lines {
         writeln!(file, "{}", line)?;
     }
-    
+
     for (key, value) in entries {
         let entry = CacheEntry::new(key.clone(), value.clone(), username.to_string());
         writeln!(file, "{}", entry.to_line())?;
     }
-    
+
     Ok(())
 }

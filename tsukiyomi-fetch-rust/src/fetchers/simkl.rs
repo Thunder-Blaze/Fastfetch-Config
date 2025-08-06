@@ -1,4 +1,8 @@
-use crate::{cache, config, http, error::{FetchError, Result}};
+use crate::{
+    cache, config,
+    error::{FetchError, Result},
+    http,
+};
 use serde::Deserialize;
 
 #[derive(Deserialize, Default)]
@@ -29,7 +33,11 @@ pub fn fetch(media_type: &str, stat_type: &str) -> Result<String> {
     let cache_key = format!("sk_{}_{}", media_type, stat_type);
 
     // If *any* stat is cached, assume all are
-    if cache::get_cached("sk_anime_hours", &user).ok().flatten().is_some() {
+    if cache::get_cached("sk_anime_hours", &user)
+        .ok()
+        .flatten()
+        .is_some()
+    {
         return cache::get_cached(&cache_key, &user)?
             .ok_or_else(|| FetchError::cache("Cached value not found for Simkl"));
     }
@@ -69,7 +77,7 @@ pub fn fetch(media_type: &str, stat_type: &str) -> Result<String> {
         ("sk_movies_completed".to_string(), movies_completed),
         ("sk_totalhours".to_string(), total_hours.to_string()),
     ];
-    
+
     cache::save_multiple_cache(&cache_entries, &user)?;
 
     // Retrieve only the one user asked for

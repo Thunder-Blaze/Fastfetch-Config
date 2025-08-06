@@ -1,4 +1,8 @@
-use crate::{cache, config, http, error::{FetchError, Result}};
+use crate::{
+    cache, config,
+    error::{FetchError, Result},
+    http,
+};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -26,7 +30,10 @@ pub fn fetch(subparam: &str) -> Result<String> {
                 cache::save_cache(&key, &rank_str, &user)?;
                 Ok(rank_str)
             } else {
-                Err(FetchError::api("LeetCode", "Could not fetch LeetCode Rank".to_string()))
+                Err(FetchError::api(
+                    "LeetCode",
+                    "Could not fetch LeetCode Rank".to_string(),
+                ))
             }
         }
         _ => Err(FetchError::invalid_param("LeetCode", subparam)),

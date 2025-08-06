@@ -1,4 +1,8 @@
-use crate::{cache, config, http, error::{FetchError, Result}};
+use crate::{
+    cache, config,
+    error::{FetchError, Result},
+    http,
+};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -42,7 +46,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
         .error_for_status()
         .map_err(|e| FetchError::api("Instagram", e.to_string()))?
         .text()?;
-    
+
     let resp: InstagramData = serde_json::from_str(&response_text)?;
 
     let followers = resp.data.user.edge_followed_by.count.to_string();

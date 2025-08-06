@@ -1,4 +1,8 @@
-use crate::{cache, config, http, error::{FetchError, Result}};
+use crate::{
+    cache, config,
+    error::{FetchError, Result},
+    http,
+};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -23,7 +27,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
 
     let username = config::get_config_value("GitHub")
         .ok_or_else(|| FetchError::config("Missing GitHub username. Run with --setup"))?;
-    
+
     let cache_key = format!("gh_{}", subparam);
 
     if let Ok(Some(cached)) = cache::get_cached(&cache_key, &username) {

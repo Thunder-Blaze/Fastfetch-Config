@@ -1,4 +1,8 @@
-use crate::{cache, config, http, error::{FetchError, Result}};
+use crate::{
+    cache, config,
+    error::{FetchError, Result},
+    http,
+};
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -69,7 +73,10 @@ pub fn fetch(subparam: &str) -> Result<String> {
         "variables": { "name": user }
     });
 
-    let response_text = http::post_with_retry(&http::endpoints::ANILIST_GRAPHQL.base_url, &payload.to_string())?;
+    let response_text = http::post_with_retry(
+        &http::endpoints::ANILIST_GRAPHQL.base_url,
+        &payload.to_string(),
+    )?;
     let resp: AniListResponse = serde_json::from_str(&response_text)?;
 
     let anime_count = resp.data.user.statistics.anime.count.to_string();

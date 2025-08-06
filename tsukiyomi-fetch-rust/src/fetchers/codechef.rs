@@ -1,4 +1,8 @@
-use crate::{cache, config, http, error::{FetchError, Result}};
+use crate::{
+    cache, config,
+    error::{FetchError, Result},
+    http,
+};
 use regex::Regex;
 
 /// Extract rating and max rating from CodeChef HTML.
@@ -43,8 +47,11 @@ pub fn fetch(subparam: &str) -> Result<String> {
     }
 
     let val = match subparam {
-        "rating" => rating.ok_or_else(|| FetchError::api("CodeChef", "Rating not found".to_string()))?,
-        "maxrating" => maxrating.ok_or_else(|| FetchError::api("CodeChef", "Max rating not found".to_string()))?,
+        "rating" => {
+            rating.ok_or_else(|| FetchError::api("CodeChef", "Rating not found".to_string()))?
+        }
+        "maxrating" => maxrating
+            .ok_or_else(|| FetchError::api("CodeChef", "Max rating not found".to_string()))?,
         _ => return Err(FetchError::invalid_param("CodeChef", subparam)),
     };
 

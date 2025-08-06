@@ -1,4 +1,8 @@
-use crate::{cache, config, http, error::{FetchError, Result}};
+use crate::{
+    cache, config,
+    error::{FetchError, Result},
+    http,
+};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -23,7 +27,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
 
     let username = config::get_config_value("Codeforces")
         .ok_or_else(|| FetchError::config("Missing Codeforces handle. Run with --setup"))?;
-    
+
     let cache_key = format!("cf_{}", subparam);
 
     if let Ok(Some(cached)) = cache::get_cached(&cache_key, &username) {
@@ -38,15 +42,23 @@ pub fn fetch(subparam: &str) -> Result<String> {
         return Err(FetchError::api("Codeforces", "API returned non-OK status"));
     }
 
-    let user_info = response.result.first()
+    let user_info = response
+        .result
+        .first()
         .ok_or_else(|| FetchError::api("Codeforces", "No user data in response"))?;
 
     // Cache both values when we fetch them
     let entries = vec![
-        ("cf_rating".to_string(), user_info.rating.unwrap_or(0).to_string()),
-        ("cf_maxrating".to_string(), user_info.max_rating.unwrap_or(0).to_string()),
+        (
+            "cf_rating".to_string(),
+            user_info.rating.unwrap_or(0).to_string(),
+        ),
+        (
+            "cf_maxrating".to_string(),
+            user_info.max_rating.unwrap_or(0).to_string(),
+        ),
     ];
-    
+
     cache::save_multiple_cache(&entries, &username)?;
 
     let value = match subparam {

@@ -1,7 +1,10 @@
 use crate::fetchers::{
     anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, simkl,
 };
-use crate::{constants, error::{FetchError, Result}};
+use crate::{
+    constants,
+    error::{FetchError, Result},
+};
 
 // Helper function to safely fetch values, returning empty string on any error
 fn safe_fetch<T>(result: crate::error::Result<T>) -> Option<T> {
@@ -56,7 +59,9 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
     let platform_defaults = constants::get_platform_icons(platform);
 
     let icon = |i: usize, fallback: &str| {
-        icons.get(i).cloned()
+        icons
+            .get(i)
+            .cloned()
             .or_else(|| platform_defaults.get(i).map(|s| s.to_string()))
             .unwrap_or_else(|| fallback.to_string())
     };
@@ -64,26 +69,26 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
 
     match platform {
         "codeforces" => {
-            match (safe_fetch(codeforces::fetch("rating")), safe_fetch(codeforces::fetch("maxrating"))) {
-                (Some(rating), Some(max)) => Ok(format!(
-                    "{} {} {}",
-                    rating,
-                    color(&icon(0, "")),
-                    max
-                )),
-                _ => Ok(String::new()) // Silent failure on any error
+            match (
+                safe_fetch(codeforces::fetch("rating")),
+                safe_fetch(codeforces::fetch("maxrating")),
+            ) {
+                (Some(rating), Some(max)) => {
+                    Ok(format!("{} {} {}", rating, color(&icon(0, "")), max))
+                }
+                _ => Ok(String::new()), // Silent failure on any error
             }
         }
 
         "codechef" => {
-            match (safe_fetch(codechef::fetch("rating")), safe_fetch(codechef::fetch("maxrating"))) {
-                (Some(rating), Some(max)) => Ok(format!(
-                    "{} {} {}",
-                    rating,
-                    color(&icon(0, "")),
-                    max
-                )),
-                _ => Ok(String::new())
+            match (
+                safe_fetch(codechef::fetch("rating")),
+                safe_fetch(codechef::fetch("maxrating")),
+            ) {
+                (Some(rating), Some(max)) => {
+                    Ok(format!("{} {} {}", rating, color(&icon(0, "")), max))
+                }
+                _ => Ok(String::new()),
             }
         }
 
@@ -105,7 +110,7 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                     color(&icon(3, "")),
                     followers
                 )),
-                _ => Ok(String::new())
+                _ => Ok(String::new()),
             }
         }
 
@@ -127,7 +132,7 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                     color(&icon(3, "")),
                     chapters
                 )),
-                _ => Ok(String::new())
+                _ => Ok(String::new()),
             }
         }
 
@@ -143,7 +148,7 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                     color(&icon(1, "")),
                     hours
                 )),
-                _ => Ok(String::new())
+                _ => Ok(String::new()),
             }
         }
 
@@ -165,21 +170,19 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                     color(&icon(3, "")),
                     chapters
                 )),
-                _ => Ok(String::new())
+                _ => Ok(String::new()),
             }
         }
 
-        "leetcode" => {
-            match safe_fetch(leetcode::fetch("rank")) {
-                Some(rank) => Ok(format!("{} {}", color(&icon(0, "󰆥")), rank)),
-                _ => Ok(String::new())
-            }
-        }
+        "leetcode" => match safe_fetch(leetcode::fetch("rank")) {
+            Some(rank) => Ok(format!("{} {}", color(&icon(0, "󰆥")), rank)),
+            _ => Ok(String::new()),
+        },
 
         "instagram" => {
             match (
-                safe_fetch(instagram::fetch("followers")), 
-                safe_fetch(instagram::fetch("following"))
+                safe_fetch(instagram::fetch("followers")),
+                safe_fetch(instagram::fetch("following")),
             ) {
                 (Some(followers), Some(following)) => Ok(format!(
                     "{} {} {} {}",
@@ -188,7 +191,7 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                     color(&icon(1, "")),
                     following
                 )),
-                _ => Ok(String::new())
+                _ => Ok(String::new()),
             }
         }
 
