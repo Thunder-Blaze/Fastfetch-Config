@@ -1,8 +1,7 @@
 use once_cell::sync::Lazy;
 use reqwest::blocking::Client;
 use reqwest::header::{HeaderMap, HeaderValue, USER_AGENT};
-use std::thread;
-use std::time::Duration;
+use std::{thread, time::Duration};
 
 use crate::constants::{APP_USER_AGENT, HTTP_TIMEOUT_SECONDS, MAX_RETRIES};
 use crate::error::{FetchError, Result};
@@ -94,12 +93,18 @@ pub mod endpoints {
 }
 
 /// Perform HTTP GET request with retry logic and exponential backoff
-pub fn get_with_retry(url: &str) -> Result<String> {
+pub fn get_with_retry(url: &str, auth_token: Option<String>) -> Result<String> {
     let mut retry_count = 0;
     let mut delay = Duration::from_millis(100); // Start with 100ms delay
 
     loop {
-        match HTTP_CLIENT.get(url).send() {
+        let mut request = HTTP_CLIENT.get(url);
+    
+        if let Some(token) = &auth_token {
+            request = request.header("Authorization", format!("Bearer {}", token));
+        }
+
+        match request.send() {
             Ok(response) => {
                 if response.status().is_success() {
                     match response.text() {
@@ -135,15 +140,19 @@ pub fn get_with_retry(url: &str) -> Result<String> {
 }
 
 /// Perform HTTP POST request with retry logic and exponential backoff
-pub fn post_with_retry(url: &str, body: &str) -> Result<String> {
+pub fn post_with_retry(url: &str, body: &str, auth_token: Option<String>) -> Result<String> {
     let mut retry_count = 0;
     let mut delay = Duration::from_millis(100);
 
     loop {
-        match HTTP_CLIENT
-            .post(url)
+        let mut request = HTTP_CLIENT.post(url).body(body.to_string());
+
+        if let Some(token) = &auth_token {
+            request = request.header("Authorization", format!("Bearer {}", token));
+        }
+        
+        match request
             .header("Content-Type", "application/json")
-            .body(body.to_string())
             .send()
         {
             Ok(response) => {

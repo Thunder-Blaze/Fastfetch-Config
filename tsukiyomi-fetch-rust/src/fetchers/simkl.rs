@@ -44,7 +44,7 @@ pub fn fetch(media_type: &str, stat_type: &str) -> Result<String> {
 
     // Fetch all stats in one go
     let url = http::endpoints::SIMKL_STATS.url(&[&user]);
-    let response_text = http::get_with_retry(&url)?;
+    let response_text = http::get_with_retry(&url, None)?;
     let resp: SimklStats = serde_json::from_str(&response_text)?;
 
     let extract_stats = |media: Option<MediaStats>| -> (String, String) {

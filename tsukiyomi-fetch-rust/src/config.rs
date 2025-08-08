@@ -2,10 +2,7 @@ use crate::{
     constants,
     error::{FetchError, Result},
 };
-use std::collections::HashMap;
-use std::fs;
-use std::io::{self, Write};
-use std::path::PathBuf;
+use std::{collections::HashMap, fs, io::{self, Write}, path::PathBuf};
 
 #[derive(Debug, Clone)]
 pub struct Config {
@@ -126,4 +123,13 @@ pub fn setup() -> Result<()> {
     println!("You can now run tsukiyomi-fetch with your configured platforms!");
 
     Ok(())
+}
+
+pub fn get_token(platform: &str, optional: bool) -> Result<Option<String>> {
+    if let Some(token) = std::env::var(format!("{}_TOKEN", platform.to_uppercase())).ok() {
+        return Ok(Some(token));
+    } else if optional {
+        return Ok(None);
+    }
+    Err(FetchError::token(platform, "Required token is empty"))
 }

@@ -73,9 +73,17 @@ pub fn fetch(subparam: &str) -> Result<String> {
         "variables": { "name": user }
     });
 
+    let token = match config::get_token("Anilist", true) {
+        Ok(token) => token,
+        Err(e) => {
+            return Err(e);
+        }
+    };
+
     let response_text = http::post_with_retry(
         &http::endpoints::ANILIST_GRAPHQL.base_url,
         &payload.to_string(),
+        token,
     )?;
     let resp: AniListResponse = serde_json::from_str(&response_text)?;
 

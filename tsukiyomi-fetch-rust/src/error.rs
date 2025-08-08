@@ -13,6 +13,9 @@ pub enum FetchError {
 
     #[error("API error: {platform} returned: {message}")]
     Api { platform: String, message: String },
+    
+    #[error("Token error: {platform} returned: {message}")]
+    Token { platform: String, message: String },
 
     #[error("Parsing error: {message}")]
     Parse { message: String },
@@ -53,6 +56,13 @@ impl FetchError {
 
     pub fn api(platform: impl Into<String>, message: impl Into<String>) -> Self {
         Self::Api {
+            platform: platform.into(),
+            message: message.into(),
+        }
+    }
+
+    pub fn token(platform: impl Into<String>, message: impl Into<String>) -> Self {
+        Self::Token {
             platform: platform.into(),
             message: message.into(),
         }

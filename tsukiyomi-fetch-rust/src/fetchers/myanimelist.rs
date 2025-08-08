@@ -44,7 +44,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
     }
 
     let url = http::endpoints::MAL_STATS.url(&[&user]);
-    let response_text = http::get_with_retry(&url)?;
+    let response_text = http::get_with_retry(&url, None)?;
     let resp: MALStats = serde_json::from_str(&response_text)?;
 
     let mut cache_map: HashMap<&str, String> = HashMap::new();

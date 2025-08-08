@@ -35,8 +35,8 @@ pub fn fetch(subparam: &str) -> Result<String> {
     }
 
     let url = http::endpoints::CODECHEF_USER.url(&[&user]);
-    let resp = http::get_with_retry(&url)?;
-    let (rating, maxrating) = extract_ratings(&resp)?;
+    let response_text = http::get_with_retry(&url, None)?;
+    let (rating, maxrating) = extract_ratings(&response_text)?;
 
     if let Some(ref r) = rating {
         cache::save_cache("cc_rating", r, &user)?;

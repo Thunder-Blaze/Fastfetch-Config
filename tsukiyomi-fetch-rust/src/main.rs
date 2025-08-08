@@ -18,6 +18,9 @@ mod wrapper;
 
 use error::Result;
 use std::env;
+use dotenv::dotenv;
+
+
 
 fn print_help() {
     println!("tsukiyomi-fetch - A fast statistics fetcher for various platforms");
@@ -54,6 +57,7 @@ fn print_help() {
 }
 
 fn main() -> Result<()> {
+    dotenv().ok();
     let args: Vec<_> = env::args().collect();
     if let Some(a) = args.get(1) {
         if a == "--help" || a == "-h" {

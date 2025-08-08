@@ -22,7 +22,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
     match subparam {
         "rank" => {
             let url = http::endpoints::LEETCODE_USER.url(&[&user]);
-            let response_text = http::get_with_retry(&url)?;
+            let response_text = http::get_with_retry(&url, None)?;
             let resp: LCUser = serde_json::from_str(&response_text)?;
 
             if let Some(ranking) = resp.ranking {

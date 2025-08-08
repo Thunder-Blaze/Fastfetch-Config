@@ -35,7 +35,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
     }
 
     let url = http::endpoints::CODEFORCES_USER.url(&[&username]);
-    let response_text = http::get_with_retry(&url)?;
+    let response_text = http::get_with_retry(&url, None)?;
     let response: CFApi = serde_json::from_str(&response_text)?;
 
     if response.status != "OK" {

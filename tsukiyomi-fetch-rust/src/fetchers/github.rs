@@ -37,7 +37,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
     match subparam {
         "repos" | "followers" | "following" => {
             let url = http::endpoints::GITHUB_USER.url(&[&username]);
-            let response_text = http::get_with_retry(&url)?;
+            let response_text = http::get_with_retry(&url, None)?;
             let resp: GHUser = serde_json::from_str(&response_text)?;
 
             let data = vec![
@@ -60,7 +60,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
 
         "stars" | "forks" => {
             let url = http::endpoints::GITHUB_STARS.url(&[&username]);
-            let response_text = http::get_with_retry(&url)?;
+            let response_text = http::get_with_retry(&url, None)?;
             let resp: GHStars = serde_json::from_str(&response_text)?;
 
             let data = vec![
@@ -81,7 +81,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
 
         "prs" => {
             let url = http::endpoints::GITHUB_PRS.url(&[&username]);
-            let response_text = http::get_with_retry(&url)?;
+            let response_text = http::get_with_retry(&url, None)?;
             let resp: serde_json::Value = serde_json::from_str(&response_text)?;
 
             let prs = resp["total_count"]

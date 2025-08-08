@@ -40,7 +40,6 @@ pub fn fetch(subparam: &str) -> Result<String> {
     // Instagram requires specific headers
     let response_text = http::HTTP_CLIENT
         .get(&url)
-        .header("User-Agent", "Mozilla/5.0")
         .header("x-ig-app-id", "936619743392459")
         .send()?
         .error_for_status()
