@@ -17,6 +17,9 @@ pub enum FetchError {
     #[error("Token error: {platform} returned: {message}")]
     Token { platform: String, message: String },
 
+    #[error("Api Key error: {platform} returned: {message}")]
+    ApiKey { platform: String, message: String },
+
     #[error("Parsing error: {message}")]
     Parse { message: String },
 
@@ -63,6 +66,13 @@ impl FetchError {
 
     pub fn token(platform: impl Into<String>, message: impl Into<String>) -> Self {
         Self::Token {
+            platform: platform.into(),
+            message: message.into(),
+        }
+    }
+    
+    pub fn api_key(platform: impl Into<String>, message: impl Into<String>) -> Self {
+        Self::ApiKey {
             platform: platform.into(),
             message: message.into(),
         }

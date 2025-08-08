@@ -88,6 +88,7 @@ pub fn setup() -> Result<()> {
         ("MyAnimeList", "MyAnimeList username"),
         ("Instagram", "Instagram username"),
         ("Reddit", "Reddit username"),
+        ("Steam", "Steam ID (numeric)"),
     ];
 
     let mut config = Config::load().unwrap_or_else(|_| Config {
@@ -130,11 +131,15 @@ pub fn setup() -> Result<()> {
     Ok(())
 }
 
-pub fn get_token(platform: &str, optional: bool) -> Result<Option<String>> {
+pub fn get_token(platform: &str, required: bool, key: bool) -> Result<Option<String>> {
     if let Some(token) = std::env::var(format!("{}_TOKEN", platform.to_uppercase())).ok() {
         return Ok(Some(token));
-    } else if optional {
+    } else if !required {
         return Ok(None);
     }
-    Err(FetchError::token(platform, "Required token is empty"))
+    if key {
+        Err(FetchError::api_key(platform, "Required api key is missing"))
+    } else {
+        Err(FetchError::token(platform, "Required token is missing"))
+    }
 }

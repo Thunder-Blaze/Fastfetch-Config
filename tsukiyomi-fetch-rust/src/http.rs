@@ -90,6 +90,11 @@ pub mod endpoints {
         base_url: "https://www.reddit.com",
         path_template: "/user/{0}/about.json",
     };
+
+    pub const STEAM_STATS: ApiEndpoint = ApiEndpoint {
+        base_url: "https://api.steampowered.com",
+        path_template: "/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json&include_appinfo=1",
+    };
 }
 
 /// Perform HTTP GET request with retry logic and exponential backoff

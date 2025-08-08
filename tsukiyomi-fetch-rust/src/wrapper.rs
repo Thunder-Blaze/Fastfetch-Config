@@ -1,5 +1,5 @@
 use crate::fetchers::{
-    anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, reddit, simkl,
+    anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, reddit, simkl, steam,
 };
 use crate::{
     constants,
@@ -206,6 +206,22 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                     link_karma,
                     color(&icon(1, "")),
                     comment_karma,
+                )),
+                _ => Ok(String::new()),
+            }
+        }
+
+        "steam" => {
+            match (
+                safe_fetch(steam::fetch("total_games")),
+                safe_fetch(steam::fetch("total_hours")),
+            ) {
+                (Some(total_games), Some(total_hours)) => Ok(format!(
+                    "{} {} {} {}h",
+                    color(&icon(0, "")),
+                    total_games,
+                    color(&icon(1, "")),
+                    total_hours
                 )),
                 _ => Ok(String::new()),
             }

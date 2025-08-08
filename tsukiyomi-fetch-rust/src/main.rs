@@ -13,6 +13,7 @@ mod fetchers {
     pub mod myanimelist;
     pub mod reddit;
     pub mod simkl;
+    pub mod steam;
 }
 mod wrapper;
 
@@ -39,6 +40,7 @@ fn print_help() {
     println!("    myanimelist  MyAnimeList statistics (anime_total, manga_total, etc.)");
     println!("    instagram    Instagram statistics (followers, following)");
     println!("    reddit       Reddit statistics (link karma, comment karma)");
+    println!("    steam        Steam statistics (total_games, total_hours)");
     println!();
     println!("OPTIONS:");
     println!("    --setup      Interactive configuration setup");
@@ -100,6 +102,7 @@ fn main() -> Result<()> {
         "myanimelist" => fetchers::myanimelist::fetch(sub)?,
         "instagram" => fetchers::instagram::fetch(sub)?,
         "reddit" => fetchers::reddit::fetch(sub)?,
+        "steam" => fetchers::steam::fetch(sub)?,
         _ => {
             print_help();
             return Ok(());

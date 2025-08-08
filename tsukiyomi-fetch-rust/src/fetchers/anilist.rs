@@ -73,11 +73,9 @@ pub fn fetch(subparam: &str) -> Result<String> {
         "variables": { "name": user }
     });
 
-    let token = match config::get_token("Anilist", true) {
+    let token = match config::get_token("Anilist", false, false) {
         Ok(token) => token,
-        Err(e) => {
-            return Err(e);
-        }
+        Err(e) => return Err(e)
     };
 
     let response_text = http::post_with_retry(

@@ -18,12 +18,13 @@ pub const MAX_RETRIES: usize = 3;
 pub const CODEFORCES_ICONS: &[&str] = &[""];
 pub const CODECHEF_ICONS: &[&str] = &[""];
 pub const GITHUB_ICONS: &[&str] = &["", "", "", ""];
-pub const ANILIST_ICONS: &[&str] = &["", "", "󰂺", ""];
-pub const SIMKL_ICONS: &[&str] = &["", ""];
-pub const MYANIMELIST_ICONS: &[&str] = &["", "", "󰂺", ""];
+pub const ANILIST_ICONS: &[&str] = &["󰑈", "󰈈", "󰂺", "󰈈"];
+pub const SIMKL_ICONS: &[&str] = &["", "󰈈"];
+pub const MYANIMELIST_ICONS: &[&str] = &["", "󰈈", "󰂺", "󰈈"];
 pub const LEETCODE_ICONS: &[&str] = &["󰆥"];
 pub const INSTAGRAM_ICONS: &[&str] = &["", ""];
 pub const REDDIT_ICONS: &[&str] = &["", ""];
+pub const STEAM_ICONS: &[&str] = &["󰊖", "󰥔"];
 
 // Helper function to get platform-specific default icons
 pub fn get_platform_icons(platform: &str) -> &'static [&'static str] {
@@ -37,6 +38,7 @@ pub fn get_platform_icons(platform: &str) -> &'static [&'static str] {
         "leetcode" => LEETCODE_ICONS,
         "instagram" => INSTAGRAM_ICONS,
         "reddit" => REDDIT_ICONS,
+        "steam" => STEAM_ICONS,
         _ => &[], // Empty array for unknown platforms
     }
 }
