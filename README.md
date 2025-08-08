@@ -49,41 +49,42 @@ Tsukiyomi Fetch transforms your terminal into a beautiful and informative dashbo
 
 ```
 Tsukiyomi-Fetch/
-├── assets/                        # Preview images and documentation media
-│   ├── Preview1.webp                 # Red theme preview
-│   ├── Preview2.webp                 # Green theme preview
-│   └── Preview3.webp                 # Main preview image
-├── fastfetch/                      # Core Fastfetch configuration
-│   ├── pngs/                       # 50+ high-quality anime images
-│   ├── config.jsonc               # Primary Fastfetch configuration
-│   ├── config2.jsonc              # Alternative configuration
-│   └── tsukiyomi-fetch            # Compiled Rust binary
-├── tsukiyomi-fetch-rust/           # Rust implementation (current)
-│   ├── Cargo.toml                  # Rust dependencies and metadata
-│   ├── Cargo.lock                  # Locked dependency versions
-│   └── src/                        # Source code
-│       ├── fetchers/               # Platform-specific API fetchers
-│       │   ├── anilist.rs            # AniList API integration
-│       │   ├── codechef.rs           # CodeChef statistics
-│       │   ├── codeforces.rs         # Codeforces rating system
-│       │   ├── github.rs             # GitHub profile stats
-│       │   ├── instagram.rs          # Instagram follower data
-│       │   ├── leetcode.rs           # LeetCode ranking
-│       │   ├── myanimelist.rs        # MyAnimeList integration
-│       │   ├── reddit.rs             # Reddit Karma
-│       │   └── simkl.rs              # Simkl watch time statistics
-│       ├──  config.rs               # Configuration file handler
+├── assets/                     # Preview images and documentation media
+│   ├── Preview1.webp             # Red theme preview
+│   ├── Preview2.webp             # Green theme preview
+│   └── Preview3.webp             # Main preview image
+├── fastfetch/                  # Core Fastfetch configuration
+│   ├── pngs/                     # 50+ high-quality anime images
+│   ├── config.jsonc              # Primary Fastfetch configuration
+│   ├── config2.jsonc             # Alternative configuration
+│   └── tsukiyomi-fetch           # Compiled Rust binary
+├── tsukiyomi-fetch-rust/       # Rust implementation (current)
+│   ├── Cargo.toml                # Rust dependencies and metadata
+│   ├── Cargo.lock                # Locked dependency versions
+│   └── src/                      # Source code
+│       └── fetchers/               # Platform-specific API fetchers
+│           ├── anilist.rs            # AniList API integration
+│           ├── codechef.rs           # CodeChef statistics
+│           ├── codeforces.rs         # Codeforces rating system
+│           ├── instagram.rs          # Instagram follower data
+│           ├── github.rs             # GitHub profile stats
+│           ├── leetcode.rs           # LeetCode ranking
+│           ├── myanimelist.rs        # MyAnimeList integration
+│           ├── reddit.rs             # Reddit Karma
+│           ├── simkl.rs              # Simkl watch time statistics
+│           └── twitter.rs            # Twitter followers
+│       ├──  config.rs              # Configuration file handler
 │       ├── cache.rs                # Intelligent caching system
 │       ├── http.rs                 # HTTP client and utilities
 │       ├── error.rs                # Error handling and types
 │       ├── wrapper.rs              # Output formatting utilities
 │       └── main.rs                 # Application entry point
-├── tsukiyomi-fetch-bash/           # Legacy Bash implementation (deprecated)
-│   ├── fastfetch-scripts.sh          # Core statistics fetcher
-│   └── fastfetch-wrapper.sh          # Bash wrapper utilities
-├── installer.sh                   # Automated installation script
-├── uninstaller.sh                # Clean removal script
-└── README.md                      # This comprehensive guide
+├── tsukiyomi-fetch-bash/       # Legacy Bash implementation (deprecated)
+│   ├── fastfetch-scripts.sh      # Core statistics fetcher
+│   └── fastfetch-wrapper.sh      # Bash wrapper utilities
+├── installer.sh                # Automated installation script
+├── uninstaller.sh              # Clean removal script
+└── README.md                   # This comprehensive guide
 ```
 
 ### Key Components
@@ -157,10 +158,39 @@ AniList=YourUsername
 MyAnimeList=YourUsername
 Reddit=your_username
 Simkl=1234567  # Your Simkl User ID (see note below)
+Steam=1234567 # Your Steam ID (see note below)
+Twitter=your_username
+```
+
+Some platforms may require additional tokens or IDs, which can be set in the `.env` file which should be created at `~/.config/fastfetch/.env`.
+```
+ANILIST=your_anilist_token
+TWITTER=your_twitter_bearer_token
+STEAM=your_steam_api_key
 ```
 
 #### 📝 Getting Your Simkl User ID
-- Visit `simkl.com/profile`, the URL becomes `simkl.com/XXXXXXX/` where XXXXXXX is your user ID.
+- Visit `https://simkl.com/profile`, the URL becomes `simkl.com/XXXXXXX/` where XXXXXXX is your user ID.
+
+#### 📝 Getting Your Steam User ID
+- Visit `https://store.steampowered.com/account/`, you'll see the numeric Steam ID below the heading `<username>'s Account`.
+
+#### 📝 Getting Your Anilist Token (For Private Anulist Profiles)
+- For Quick setup
+  1. Visit `https://anilist.co/api/v2/oauth/authorize?client_id=29217&response_type=token`
+  2. Click "Authorize" to get your token and paste it in .env file in "~/.config/fastfetch/.env"
+- For Extra Privacy Lovers
+  1. Go to [AniList settings](https://anilist.co/settings/developer).
+  2. Click on "Create New Client".
+  3. Use this URL as your client's "Redirect URL":
+  ```
+  https://anilist.co/api/v2/oauth/pin
+  ```
+
+  4. Click "Save"
+  5. Then go to https://anilist.co/api/v2/oauth/authorize?client_id={clientID}&response_type=token, replace the `{clientID}` with the client ID you get. It will ask you to log in and then provide you with the token to use.
+  6. Copy the generated token and use it in your `.env` file or environment variables.
+
 
 ### 🧠 Available Commands
 
@@ -208,6 +238,7 @@ These commands fetch and format common available stats for a platform:
 | `instagram following` | `456` | Instagram following |
 | `reddit link_karma` | `100` | Link Karma earned |
 | `reddit comment_karma` | `298` | Comment Karma Earned |
+| `twitter followers` | `323` | Twitter followers |
 
 </details>
 
@@ -377,7 +408,7 @@ If you find this project helpful, please consider:
 - **Share** with the community
 
 Special thanks to:
-- [**Zero**](https://github.com/GraveEaterMadison) - Instagram, Reddit fetcher implementation
+- [**Zero**](https://github.com/GraveEaterMadison) - Instagram, Reddit, Twitter fetcher implementation
 - [**Insane**](https://github.com/In-Saiyan) - CodeChef fetcher implementation
 
 <div align="center">

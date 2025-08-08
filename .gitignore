@@ -1,3 +1,4 @@
 tsukiyomi.cache
 tsukiyomi-fetch.conf
 **/target
+.env
