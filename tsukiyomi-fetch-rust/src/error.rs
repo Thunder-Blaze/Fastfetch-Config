@@ -13,7 +13,7 @@ pub enum FetchError {
 
     #[error("API error: {platform} returned: {message}")]
     Api { platform: String, message: String },
-    
+
     #[error("Token error: {platform} returned: {message}")]
     Token { platform: String, message: String },
 

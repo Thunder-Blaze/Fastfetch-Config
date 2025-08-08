@@ -99,7 +99,7 @@ pub fn get_with_retry(url: &str, auth_token: Option<String>) -> Result<String> {
 
     loop {
         let mut request = HTTP_CLIENT.get(url);
-    
+
         if let Some(token) = &auth_token {
             request = request.header("Authorization", format!("Bearer {}", token));
         }
@@ -150,11 +150,8 @@ pub fn post_with_retry(url: &str, body: &str, auth_token: Option<String>) -> Res
         if let Some(token) = &auth_token {
             request = request.header("Authorization", format!("Bearer {}", token));
         }
-        
-        match request
-            .header("Content-Type", "application/json")
-            .send()
-        {
+
+        match request.header("Content-Type", "application/json").send() {
             Ok(response) => {
                 if response.status().is_success() {
                     match response.text() {

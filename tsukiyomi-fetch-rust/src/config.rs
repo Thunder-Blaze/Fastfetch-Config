@@ -2,7 +2,12 @@ use crate::{
     constants,
     error::{FetchError, Result},
 };
-use std::{collections::HashMap, fs, io::{self, Write}, path::PathBuf};
+use std::{
+    collections::HashMap,
+    fs,
+    io::{self, Write},
+    path::PathBuf,
+};
 
 #[derive(Debug, Clone)]
 pub struct Config {

@@ -1,5 +1,5 @@
 use crate::fetchers::{
-    anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, simkl, reddit,
+    anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, reddit, simkl,
 };
 use crate::{
     constants,

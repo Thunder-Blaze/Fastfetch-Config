@@ -11,16 +11,14 @@ mod fetchers {
     pub mod instagram;
     pub mod leetcode;
     pub mod myanimelist;
-    pub mod simkl;
     pub mod reddit;
+    pub mod simkl;
 }
 mod wrapper;
 
+use dotenv::dotenv;
 use error::Result;
 use std::env;
-use dotenv::dotenv;
-
-
 
 fn print_help() {
     println!("tsukiyomi-fetch - A fast statistics fetcher for various platforms");
