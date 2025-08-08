@@ -120,6 +120,12 @@
         },
         {
             "type": "command",
+            "key": "    Twitter    ",
+            "keyColor": "yellow",
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper twitter --color yellow);echo -e $a"
+        },
+        {
+            "type": "command",
             "key": "  󰊤  Github     ",
             "keyColor": "green",
             "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper github --color green);echo -e $a"
@@ -129,6 +135,12 @@
             "key": "  󰄨  CodeForces ",
             "keyColor": "blue",
             "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper codeforces --color blue);echo -e $a"
+        },
+        {
+            "type": "command",
+            "key": "    Reddit     ",
+            "keyColor": "blue",
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper reddit --color blue);echo -e $a"
         },
         {
             "type": "command",
@@ -144,9 +156,9 @@
         },
         {
             "type": "command",
-            "key": "  󰫺  MyAnimeList",
-            "keyColor": "magenta",
-            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper myanimelist --color magenta);echo -e $a"
+            "key": "    MyAnimeList",
+            "keyColor": "cyan",
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper myanimelist --color cyan);echo -e $a"
         },
         {
             "type": "command",

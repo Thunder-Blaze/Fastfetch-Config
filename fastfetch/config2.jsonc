@@ -118,9 +118,21 @@
         },
         {
             "type": "command",
-            "key": "├─  󰫺  MyAnimeList",
+            "key": "├─    Reddit     ",
+            "keyColor": "blue",
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper reddit --color blue);echo -e $a"
+        },
+        {
+            "type": "command",
+            "key": "├─    MyAnimeList",
             "keyColor": "magenta",
             "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper myanimelist --color magenta);echo -e $a"
+        },
+        {
+            "type": "command",
+            "key": "├─    Twitter    ",
+            "keyColor": "yellow",
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper twitter --color yellow);echo -e $a"
         },
         {
             "type": "command",
