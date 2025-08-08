@@ -25,6 +25,7 @@ pub const LEETCODE_ICONS: &[&str] = &["󰆥"];
 pub const INSTAGRAM_ICONS: &[&str] = &["", ""];
 pub const REDDIT_ICONS: &[&str] = &["", ""];
 pub const STEAM_ICONS: &[&str] = &["󰊖", "󰥔"];
+pub const TWITTER_ICONS: &[&str] = &[""];
 
 // Helper function to get platform-specific default icons
 pub fn get_platform_icons(platform: &str) -> &'static [&'static str] {
@@ -39,6 +40,7 @@ pub fn get_platform_icons(platform: &str) -> &'static [&'static str] {
         "instagram" => INSTAGRAM_ICONS,
         "reddit" => REDDIT_ICONS,
         "steam" => STEAM_ICONS,
+        "twitter" => TWITTER_ICONS,
         _ => &[], // Empty array for unknown platforms
     }
 }

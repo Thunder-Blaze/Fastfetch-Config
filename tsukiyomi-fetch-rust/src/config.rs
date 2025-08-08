@@ -89,6 +89,7 @@ pub fn setup() -> Result<()> {
         ("Instagram", "Instagram username"),
         ("Reddit", "Reddit username"),
         ("Steam", "Steam ID (numeric)"),
+        ("Twitter", "Twitter username"),
     ];
 
     let mut config = Config::load().unwrap_or_else(|_| Config {
@@ -132,7 +133,7 @@ pub fn setup() -> Result<()> {
 }
 
 pub fn get_token(platform: &str, required: bool, key: bool) -> Result<Option<String>> {
-    if let Some(token) = std::env::var(format!("{}_TOKEN", platform.to_uppercase())).ok() {
+    if let Some(token) = std::env::var(format!("{}", platform.to_uppercase())).ok() {
         return Ok(Some(token));
     } else if !required {
         return Ok(None);

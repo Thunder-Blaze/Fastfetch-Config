@@ -32,7 +32,7 @@ pub fn fetch(subparam: &str) -> Result<String> {
 
     let api_key = match config::get_token("Steam", true, true) {
         Ok(api_key) => api_key.unwrap(),
-        Err(e) => Err(e)?
+        Err(e) => Err(e)?,
     };
 
     let cache_key = format!("steam_{}", subparam);
@@ -42,19 +42,22 @@ pub fn fetch(subparam: &str) -> Result<String> {
     }
 
     let url = http::endpoints::STEAM_STATS.url(&[&api_key, &steam_id]);
-
     let response_text = http::get_with_retry(&url, None)?;
     let response: SteamResponse = serde_json::from_str(&response_text)?;
 
     let games = response.response.games;
 
     let total_games = games.len();
-    let total_hours: f64 = games.iter().map(|g| g.playtime_forever as u64).sum::<u64>() as f64 / 60.0;
+    let total_hours: f64 =
+        games.iter().map(|g| g.playtime_forever as u64).sum::<u64>() as f64 / 60.0;
 
     // Cache both values
     let entries = vec![
         ("steam_total_games".to_string(), total_games.to_string()),
-        ("steam_total_hours".to_string(), format!("{:.2}", total_hours)),
+        (
+            "steam_total_hours".to_string(),
+            format!("{:.2}", total_hours),
+        ),
     ];
 
     cache::save_multiple_cache(&entries, &steam_id)?;

@@ -70,7 +70,7 @@ impl FetchError {
             message: message.into(),
         }
     }
-    
+
     pub fn api_key(platform: impl Into<String>, message: impl Into<String>) -> Self {
         Self::ApiKey {
             platform: platform.into(),

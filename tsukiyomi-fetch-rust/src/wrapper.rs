@@ -1,5 +1,6 @@
 use crate::fetchers::{
     anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, reddit, simkl, steam,
+    twitter,
 };
 use crate::{
     constants,
@@ -217,7 +218,7 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                 safe_fetch(steam::fetch("total_hours")),
             ) {
                 (Some(total_games), Some(total_hours)) => Ok(format!(
-                    "{} {} {} {}h",
+                    "{} {} {} {}",
                     color(&icon(0, "")),
                     total_games,
                     color(&icon(1, "")),
@@ -226,6 +227,11 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                 _ => Ok(String::new()),
             }
         }
+
+        "twitter" => match safe_fetch(twitter::fetch("followers")) {
+            Some(followers) => Ok(format!("{} {}", color(&icon(0, "")), followers,)),
+            _ => Ok(String::new()),
+        },
 
         _ => Err(FetchError::platform_not_found(platform)),
     }

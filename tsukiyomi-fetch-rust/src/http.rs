@@ -93,12 +93,23 @@ pub mod endpoints {
 
     pub const STEAM_STATS: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.steampowered.com",
-        path_template: "/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json&include_appinfo=1",
+        path_template:
+            "/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json&include_appinfo=1",
+    };
+
+    pub const TWITTER_ID: ApiEndpoint = ApiEndpoint {
+        base_url: "https://api.twitter.com",
+        path_template: "/2/users/by/username/{0}",
+    };
+
+    pub const TWITTER_USER: ApiEndpoint = ApiEndpoint {
+        base_url: "https://api.twitter.com",
+        path_template: "/2/users/{}?user.fields=public_metrics",
     };
 }
 
 /// Perform HTTP GET request with retry logic and exponential backoff
-pub fn get_with_retry(url: &str, auth_token: Option<String>) -> Result<String> {
+pub fn get_with_retry(url: &str, auth_token: Option<&String>) -> Result<String> {
     let mut retry_count = 0;
     let mut delay = Duration::from_millis(100); // Start with 100ms delay
 
@@ -145,7 +156,7 @@ pub fn get_with_retry(url: &str, auth_token: Option<String>) -> Result<String> {
 }
 
 /// Perform HTTP POST request with retry logic and exponential backoff
-pub fn post_with_retry(url: &str, body: &str, auth_token: Option<String>) -> Result<String> {
+pub fn post_with_retry(url: &str, body: &str, auth_token: &Option<String>) -> Result<String> {
     let mut retry_count = 0;
     let mut delay = Duration::from_millis(100);
 
