@@ -1,5 +1,5 @@
 use crate::fetchers::{
-    anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, simkl,
+    anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, simkl, reddit,
 };
 use crate::{
     constants,
@@ -190,6 +190,22 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                     followers,
                     color(&icon(1, "")),
                     following
+                )),
+                _ => Ok(String::new()),
+            }
+        }
+
+        "reddit" => {
+            match (
+                safe_fetch(reddit::fetch("link_karma")),
+                safe_fetch(reddit::fetch("comment_karma")),
+            ) {
+                (Some(link_karma), Some(comment_karma)) => Ok(format!(
+                    "{} {} {} {}",
+                    color(&icon(0, "")),
+                    link_karma,
+                    color(&icon(1, "")),
+                    comment_karma,
                 )),
                 _ => Ok(String::new()),
             }

@@ -85,6 +85,7 @@ pub fn setup() -> Result<()> {
         ("Simkl", "Simkl user ID"),
         ("MyAnimeList", "MyAnimeList username"),
         ("Instagram", "Instagram username"),
+        ("Reddit", "Reddit username"),
     ];
 
     let mut config = Config::load().unwrap_or_else(|_| Config {

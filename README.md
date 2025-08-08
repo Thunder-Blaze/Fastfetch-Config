@@ -70,6 +70,7 @@ Tsukiyomi-Fetch/
 │       │   ├── instagram.rs          # Instagram follower data
 │       │   ├── leetcode.rs           # LeetCode ranking
 │       │   ├── myanimelist.rs        # MyAnimeList integration
+│       │   ├── reddit.rs             # Reddit Karma
 │       │   └── simkl.rs              # Simkl watch time statistics
 │       ├──  config.rs               # Configuration file handler
 │       ├── cache.rs                # Intelligent caching system
@@ -154,6 +155,7 @@ CodeChef=your_handle
 LeetCode=your_username
 AniList=YourUsername
 MyAnimeList=YourUsername
+Reddit=your_username
 Simkl=1234567  # Your Simkl User ID (see note below)
 ```
 
@@ -204,6 +206,8 @@ These commands fetch and format common available stats for a platform:
 | `myanimelist anime_episodes` | `3456` | MAL episodes watched |
 | `instagram followers` | `2847` | Instagram followers |
 | `instagram following` | `456` | Instagram following |
+| `reddit link_karma` | `100` | Link Karma earned |
+| `reddit comment_karma` | `298` | Comment Karma Earned |
 
 </details>
 
@@ -373,7 +377,7 @@ If you find this project helpful, please consider:
 - **Share** with the community
 
 Special thanks to:
-- [**Zero**](https://github.com/GraveEaterMadison) - Instagram fetcher implementation
+- [**Zero**](https://github.com/GraveEaterMadison) - Instagram, Reddit fetcher implementation
 - [**Insane**](https://github.com/In-Saiyan) - CodeChef fetcher implementation
 
 <div align="center">

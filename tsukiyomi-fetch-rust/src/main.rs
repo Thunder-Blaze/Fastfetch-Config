@@ -12,6 +12,7 @@ mod fetchers {
     pub mod leetcode;
     pub mod myanimelist;
     pub mod simkl;
+    pub mod reddit;
 }
 mod wrapper;
 
@@ -36,6 +37,7 @@ fn print_help() {
     println!("    simkl        Simkl statistics (movies, tv, anime with completed/hours)");
     println!("    myanimelist  MyAnimeList statistics (anime_total, manga_total, etc.)");
     println!("    instagram    Instagram statistics (followers, following)");
+    println!("    reddit       Reddit statistics (link karma, comment karma)");
     println!();
     println!("OPTIONS:");
     println!("    --setup      Interactive configuration setup");
@@ -95,6 +97,7 @@ fn main() -> Result<()> {
         "anilist" => fetchers::anilist::fetch(sub)?,
         "myanimelist" => fetchers::myanimelist::fetch(sub)?,
         "instagram" => fetchers::instagram::fetch(sub)?,
+        "reddit" => fetchers::reddit::fetch(sub)?,
         _ => {
             print_help();
             return Ok(());

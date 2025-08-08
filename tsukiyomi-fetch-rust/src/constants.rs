@@ -23,6 +23,7 @@ pub const SIMKL_ICONS: &[&str] = &["", ""];
 pub const MYANIMELIST_ICONS: &[&str] = &["", "", "󰂺", ""];
 pub const LEETCODE_ICONS: &[&str] = &["󰆥"];
 pub const INSTAGRAM_ICONS: &[&str] = &["", ""];
+pub const REDDIT_ICONS: &[&str] = &["", ""];
 
 // Helper function to get platform-specific default icons
 pub fn get_platform_icons(platform: &str) -> &'static [&'static str] {
@@ -35,6 +36,7 @@ pub fn get_platform_icons(platform: &str) -> &'static [&'static str] {
         "myanimelist" => MYANIMELIST_ICONS,
         "leetcode" => LEETCODE_ICONS,
         "instagram" => INSTAGRAM_ICONS,
+        "reddit" => REDDIT_ICONS,
         _ => &[], // Empty array for unknown platforms
     }
 }

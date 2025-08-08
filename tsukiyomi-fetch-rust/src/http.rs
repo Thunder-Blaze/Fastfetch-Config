@@ -86,6 +86,11 @@ pub mod endpoints {
         base_url: "https://i.instagram.com",
         path_template: "/api/v1/users/web_profile_info/?username={0}",
     };
+
+    pub const REDDIT_USER: ApiEndpoint = ApiEndpoint {
+        base_url: "https://www.reddit.com",
+        path_template: "/user/{0}/about.json",
+    };
 }
 
 /// Perform HTTP GET request with retry logic and exponential backoff
