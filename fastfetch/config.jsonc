@@ -120,6 +120,30 @@
         },
         {
             "type": "command",
+            "key": "    MyAnimeList",
+            "keyColor": "cyan",
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper myanimelist --color cyan);echo -e $a"
+        },
+        {
+            "type": "command",
+            "key": "  󰄨  Simkl      ",
+            "keyColor": "red",
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper simkl --color red);echo -e $a"
+        },
+        {
+            "type": "command",
+            "key": "    Instagram  ",
+            "keyColor": "magenta",
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper instagram --color magenta);echo -e $a"
+        },
+        {
+            "type": "command",
+            "key": "    Reddit     ",
+            "keyColor": "blue",
+            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper reddit --color blue);echo -e $a"
+        },
+        {
+            "type": "command",
             "key": "    Twitter    ",
             "keyColor": "yellow",
             "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper twitter --color yellow);echo -e $a"
@@ -138,39 +162,15 @@
         },
         {
             "type": "command",
-            "key": "    Reddit     ",
-            "keyColor": "blue",
-            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper reddit --color blue);echo -e $a"
-        },
-        {
-            "type": "command",
             "key": "    LeetCode   ",
             "keyColor": "magenta",
             "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper leetcode --color magenta);echo -e $a"
         },
         {
             "type": "command",
-            "key": "    Instagram  ",
-            "keyColor": "magenta",
-            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper instagram --color magenta);echo -e $a"
-        },
-        {
-            "type": "command",
-            "key": "    MyAnimeList",
-            "keyColor": "cyan",
-            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper myanimelist --color cyan);echo -e $a"
-        },
-        {
-            "type": "command",
             "key": "  󰭼  Codechef   ",
             "keyColor": "cyan",
             "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper codechef --color cyan);echo -e $a"
-        },
-        {
-            "type": "command",
-            "key": "  󰄨  Simkl      ",
-            "keyColor": "red",
-            "text": "a=$(/home/$USER/.config/fastfetch/tsukiyomi-fetch wrapper simkl --color red);echo -e $a"
         },
         {
             "type": "custom",
