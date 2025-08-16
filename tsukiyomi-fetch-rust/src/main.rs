@@ -7,6 +7,7 @@ mod fetchers {
     pub mod anilist;
     pub mod codechef;
     pub mod codeforces;
+    pub mod discord;
     pub mod github;
     pub mod instagram;
     pub mod leetcode;
@@ -15,7 +16,6 @@ mod fetchers {
     pub mod simkl;
     pub mod steam;
     pub mod twitter;
-    pub mod discord;
 }
 mod wrapper;
 

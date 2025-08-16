@@ -93,8 +93,7 @@ pub mod endpoints {
 
     pub const STEAM_STATS: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.steampowered.com",
-        path_template:
-            "/IPlayerService/GetOwnedGames/v0001/?key={0}&steamid={1}&format=json&include_appinfo=1",
+        path_template: "/IPlayerService/GetOwnedGames/v0001/?key={0}&steamid={1}&format=json&include_appinfo=1",
     };
 
     pub const TWITTER_ID: ApiEndpoint = ApiEndpoint {

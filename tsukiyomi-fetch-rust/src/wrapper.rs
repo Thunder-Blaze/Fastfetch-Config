@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
 use crate::fetchers::{
-    anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, reddit, simkl, steam, twitter, discord,
+    anilist, codechef, codeforces, discord, github, instagram, leetcode, myanimelist, reddit,
+    simkl, steam, twitter,
 };
 use crate::{
     constants,
@@ -242,8 +243,12 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                 icons.insert("Idle".to_string(), color(&icon(2, "")));
                 icons.insert("DoNotDisturb".to_string(), color(&icon(3, "")));
                 icons.insert("Offline".to_string(), color(&icon(4, "")));
-                Ok(format!("{} {}", icons.get(&status).unwrap_or(&"NotFound".to_string()), format!(" {}", status)))
-            },
+                Ok(format!(
+                    "{} {}",
+                    icons.get(&status).unwrap_or(&"NotFound".to_string()),
+                    format!(" {}", status)
+                ))
+            }
             _ => Ok(String::new()),
         },
 
