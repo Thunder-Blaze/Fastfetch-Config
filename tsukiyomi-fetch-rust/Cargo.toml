@@ -1,11 +1,12 @@
 [package]
 name = "tsukiyomi-fetch"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "A performance-optimized Rust-powered stats fetcher with async API calls, 24h intelligent caching, and customizable Fastfetch wrappers for platforms like GitHub, Discord, Codeforces, LeetCode, and more."
 license = "MIT"
 repository = "https://github.com/Thunder-Blaze/Tsukiyomi-Fetch"
 keywords = ["cli", "api", "scraping"]
+readme = "README.md"
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
