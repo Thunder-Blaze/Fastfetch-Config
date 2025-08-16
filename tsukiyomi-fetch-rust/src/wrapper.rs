@@ -1,6 +1,7 @@
+use std::collections::HashMap;
+
 use crate::fetchers::{
-    anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, reddit, simkl, steam,
-    twitter,
+    anilist, codechef, codeforces, github, instagram, leetcode, myanimelist, reddit, simkl, steam, twitter, discord,
 };
 use crate::{
     constants,
@@ -128,7 +129,7 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                     anime,
                     color(&icon(1, "")),
                     episodes,
-                    color(&icon(2, "󰂺")),
+                    color(&icon(2, "")),
                     manga,
                     color(&icon(3, "")),
                     chapters
@@ -166,7 +167,7 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
                     anime,
                     color(&icon(1, "")),
                     episodes,
-                    color(&icon(2, "󰂺")),
+                    color(&icon(2, "")),
                     manga,
                     color(&icon(3, "")),
                     chapters
@@ -230,6 +231,19 @@ pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
 
         "twitter" => match safe_fetch(twitter::fetch("followers")) {
             Some(followers) => Ok(format!("{} {}", color(&icon(0, "")), followers,)),
+            _ => Ok(String::new()),
+        },
+
+        "discord" => match safe_fetch(discord::fetch("status")) {
+            Some(status) => {
+                let mut icons: HashMap<String, String> = HashMap::new();
+                icons.insert("NotFound".to_string(), color(&icon(0, "")));
+                icons.insert("Online".to_string(), color(&icon(1, "")));
+                icons.insert("Idle".to_string(), color(&icon(2, "")));
+                icons.insert("DoNotDisturb".to_string(), color(&icon(3, "")));
+                icons.insert("Offline".to_string(), color(&icon(4, "")));
+                Ok(format!("{} {}", icons.get(&status).unwrap_or(&"NotFound".to_string()), format!(" {}", status)))
+            },
             _ => Ok(String::new()),
         },
 

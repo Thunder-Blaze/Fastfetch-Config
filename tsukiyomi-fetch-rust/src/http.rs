@@ -94,7 +94,7 @@ pub mod endpoints {
     pub const STEAM_STATS: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.steampowered.com",
         path_template:
-            "/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json&include_appinfo=1",
+            "/IPlayerService/GetOwnedGames/v0001/?key={0}&steamid={1}&format=json&include_appinfo=1",
     };
 
     pub const TWITTER_ID: ApiEndpoint = ApiEndpoint {
@@ -104,7 +104,12 @@ pub mod endpoints {
 
     pub const TWITTER_USER: ApiEndpoint = ApiEndpoint {
         base_url: "https://api.twitter.com",
-        path_template: "/2/users/{}?user.fields=public_metrics",
+        path_template: "/2/users/{0}?user.fields=public_metrics",
+    };
+
+    pub const DISCORD_STATUS: ApiEndpoint = ApiEndpoint {
+        base_url: "https://tsukiyomi-bot.onrender.com",
+        path_template: "/presences/{0}",
     };
 }
 
