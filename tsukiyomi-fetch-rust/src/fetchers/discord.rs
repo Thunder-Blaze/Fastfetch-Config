@@ -18,7 +18,10 @@ pub fn fetch(subparam: &str) -> Result<String> {
     let response_text = http::get_with_retry(&url, None)?;
 
     if response_text.is_empty() {
-        return Err(FetchError::api("Discord", "No status found for the given ID".to_string()));
+        return Err(FetchError::api(
+            "Discord",
+            "No status found for the given ID".to_string(),
+        ));
     }
 
     let value = match subparam {
