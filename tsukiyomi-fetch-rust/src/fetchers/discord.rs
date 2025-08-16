@@ -15,7 +15,6 @@ pub fn fetch(subparam: &str) -> Result<String> {
         .ok_or_else(|| FetchError::config("Missing Discord ID. Run with --setup"))?;
 
     let url = http::endpoints::DISCORD_STATUS.url(&[&id]);
-    println!("Fetching Discord status for ID: {}, {}", id, url);
     let response_text = http::get_with_retry(&url, None)?;
 
     if response_text.is_empty() {
