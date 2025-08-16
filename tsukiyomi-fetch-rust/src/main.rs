@@ -15,6 +15,7 @@ mod fetchers {
     pub mod simkl;
     pub mod steam;
     pub mod twitter;
+    pub mod discord;
 }
 mod wrapper;
 
@@ -43,6 +44,7 @@ fn print_help() {
     println!("    reddit       Reddit statistics (link karma, comment karma)");
     println!("    steam        Steam statistics (total_games, total_hours)");
     println!("    twitter      Twitter statistics (followers)");
+    println!("    discord      Discord statistics (status)");
     println!();
     println!("OPTIONS:");
     println!("    --setup      Interactive configuration setup");
@@ -106,6 +108,7 @@ fn main() -> Result<()> {
         "reddit" => fetchers::reddit::fetch(sub)?,
         "steam" => fetchers::steam::fetch(sub)?,
         "twitter" => fetchers::twitter::fetch(sub)?,
+        "discord" => fetchers::discord::fetch(sub)?,
         _ => {
             print_help();
             return Ok(());

@@ -90,6 +90,7 @@ pub fn setup() -> Result<()> {
         ("Reddit", "Reddit username"),
         ("Steam", "Steam ID (numeric)"),
         ("Twitter", "Twitter username"),
+        ("Discord", "Discord ID (numeric)"),
     ];
 
     let mut config = Config::load().unwrap_or_else(|_| Config {
