@@ -1,3 +1,27 @@
+//! # AniList Statistics Fetcher
+//!
+//! This module handles fetching user statistics from the AniList API.
+//! AniList is a social networking and cataloguing platform for anime and manga.
+//! It uses GraphQL for its API, requiring more complex query structures.
+//!
+//! ## Supported Parameters
+//!
+//! - `anime`: Total anime entries in the user's list
+//! - `manga`: Total manga entries in the user's list
+//! - `episodes`: Total episodes watched across all anime
+//! - `chapters`: Total chapters read across all manga
+//!
+//! ## Configuration
+//!
+//! Requires an AniList username to be set in the configuration file.
+//! The AniList API is public and doesn't require authentication for basic
+//! user statistics.
+//!
+//! ## API Details
+//!
+//! Uses the AniList GraphQL API: `https://graphql.anilist.co`
+//! Queries user statistics including media list counts and consumption totals.
+
 use crate::{
     cache, config,
     error::{FetchError, Result},
@@ -6,17 +30,22 @@ use crate::{
 use serde::Deserialize;
 use std::collections::HashMap;
 
+/// AniList GraphQL response wrapper
 #[derive(Deserialize)]
 struct AniListResponse {
+    /// GraphQL data payload
     data: AniListData,
 }
 
+/// AniList data container
 #[derive(Deserialize)]
 struct AniListData {
+    /// User information object
     #[serde(rename = "User")]
     user: AniListUser,
 }
 
+/// AniList user statistics structure
 #[derive(Deserialize)]
 struct AniListUser {
     statistics: AniStats,

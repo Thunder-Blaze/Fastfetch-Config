@@ -1,3 +1,21 @@
+//! # MyAnimeList Statistics Fetcher
+//!
+//! This module handles fetching user statistics from MyAnimeList (MAL) using the Jikan API.
+//! MyAnimeList is a popular anime and manga cataloguing platform, and Jikan provides
+//! a public API wrapper for MAL data.
+//!
+//! ## Supported Parameters
+//!
+//! - `anime`: Total anime entries in the user's list
+//! - `manga`: Total manga entries in the user's list
+//! - `episodes`: Total episodes watched
+//! - `chapters`: Total chapters read
+//!
+//! ## Implementation
+//!
+//! Uses the Jikan API (unofficial MAL API) to retrieve user statistics
+//! since MAL's official API requires authentication and has usage restrictions.
+
 use crate::{
     cache, config,
     error::{FetchError, Result},

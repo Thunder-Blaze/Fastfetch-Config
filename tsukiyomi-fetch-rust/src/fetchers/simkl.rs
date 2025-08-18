@@ -1,3 +1,18 @@
+//! # Simkl Statistics Fetcher
+//!
+//! This module handles fetching user statistics from Simkl, a movie and TV show
+//! tracking platform. It retrieves viewing statistics and library information.
+//!
+//! ## Supported Parameters
+//!
+//! - `movies`: Number of movies tracked
+//! - `shows`: Number of TV shows tracked
+//!
+//! ## Implementation
+//!
+//! Uses Simkl's public API to retrieve user statistics and viewing history
+//! information without requiring authentication for basic user data.
+
 use crate::{
     cache, config,
     error::{FetchError, Result},

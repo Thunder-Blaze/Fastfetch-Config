@@ -1,3 +1,36 @@
+//! # Tsukiyomi-Fetch
+//!
+//! A fast, multi-platform statistics fetcher written in Rust.
+//! 
+//! Tsukiyomi-Fetch is a command-line tool that retrieves user statistics from various platforms
+//! including GitHub, Codeforces, CodeChef, LeetCode, AniList, and many others. It features
+//! intelligent caching, configurable output formatting, and a wrapper mode for integration
+//! with system information tools like fastfetch.
+//!
+//! ## Features
+//!
+//! - **Multi-platform support**: Fetch statistics from 12+ different platforms
+//! - **Intelligent caching**: Automatic caching with configurable TTL to reduce API calls
+//! - **Wrapper mode**: Special formatting for integration with system fetch tools
+//! - **Configuration management**: Interactive setup and persistent configuration storage
+//! - **Error handling**: Comprehensive error types with detailed messages
+//! - **Retry logic**: Automatic retry with exponential backoff for network requests
+//!
+//! ## Supported Platforms
+//!
+//! - GitHub (repositories, followers, stars, etc.)
+//! - Codeforces (rating, max rating)
+//! - CodeChef (rating, max rating)
+//! - LeetCode (ranking)
+//! - AniList (anime/manga statistics)
+//! - MyAnimeList (anime/manga totals)
+//! - Instagram (followers, following)
+//! - Reddit (karma statistics)
+//! - Steam (games, hours played)
+//! - Twitter (followers)
+//! - Discord (status)
+//! - Simkl (movies, TV shows, anime)
+
 mod cache;
 mod config;
 mod constants;
@@ -23,6 +56,13 @@ use dotenv::dotenv;
 use error::Result;
 use std::env;
 
+/// Displays the help message with usage information, supported platforms, and examples.
+///
+/// This function prints comprehensive usage instructions including:
+/// - Command syntax and options
+/// - List of all supported platforms and their available metrics
+/// - Wrapper mode options for integration with other tools
+/// - Usage examples for common operations
 fn print_help() {
     println!("tsukiyomi-fetch - A fast statistics fetcher for various platforms");
     println!();
@@ -60,6 +100,36 @@ fn print_help() {
     println!("    tsukiyomi-fetch --setup");
 }
 
+/// Main entry point for the Tsukiyomi-Fetch application.
+///
+/// This function handles command-line argument parsing and dispatches requests to the
+/// appropriate fetcher modules. It supports several modes of operation:
+///
+/// - **Setup mode**: Interactive configuration (`--setup`)
+/// - **Help mode**: Display usage information (`--help`, `-h`)
+/// - **Wrapper mode**: Special formatting for fastfetch integration (`wrapper <platform>`)
+/// - **Direct fetch mode**: Fetch specific metrics from platforms (`<platform> <metric>`)
+///
+/// The function loads environment variables, validates arguments, and routes requests
+/// to the corresponding platform fetchers. All results are cached automatically to
+/// reduce API calls and improve performance.
+///
+/// # Returns
+///
+/// Returns `Ok(())` on successful execution, or a `FetchError` if any operation fails.
+///
+/// # Examples
+///
+/// ```bash
+/// # Setup configuration
+/// tsukiyomi-fetch --setup
+///
+/// # Fetch GitHub repositories
+/// tsukiyomi-fetch github repos
+///
+/// # Use wrapper mode with custom styling
+/// tsukiyomi-fetch wrapper github --color cyan --icon 
+/// ```
 fn main() -> Result<()> {
     dotenv().ok();
     let args: Vec<_> = env::args().collect();
