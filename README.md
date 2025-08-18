@@ -66,6 +66,7 @@ Tsukiyomi-Fetch/
 │           ├── anilist.rs            # AniList API integration
 │           ├── codechef.rs           # CodeChef statistics
 │           ├── codeforces.rs         # Codeforces rating system
+│           ├── discord.rs            # Discord online status
 │           ├── instagram.rs          # Instagram follower data
 │           ├── github.rs             # GitHub profile stats
 │           ├── leetcode.rs           # LeetCode ranking
@@ -157,9 +158,10 @@ LeetCode=your_username
 AniList=YourUsername
 MyAnimeList=YourUsername
 Reddit=your_username
-Simkl=1234567  # Your Simkl User ID (see note below)
-Steam=1234567 # Your Steam ID (see note below)
+Simkl=1234567  # Your Simkl User ID (see more below)
+Steam=1234567 # Your Steam ID (see more below)
 Twitter=your_username
+Discord=your_discord_id  # Your Discord ID (see more below)
 ```
 
 Some platforms may require additional tokens or IDs, which can be set in the `.env` file which should be created at `~/.config/fastfetch/.env`.
@@ -174,6 +176,11 @@ STEAM=your_steam_api_key
 
 #### 📝 Getting Your Steam User ID
 - Visit `https://store.steampowered.com/account/`, you'll see the numeric Steam ID below the heading `<username>'s Account`.
+
+#### 📝 Getting Your Discord User ID and Making Discord Work
+- Open your profile and you'll see a `Copy User ID` button, click that to copy your user ID, put it in --setup when asked.
+- Join the following Server for Discord Online Status Support: [Discord Server](https://discord.gg/863bbH2YZ9)
+- Change your status once for it to start tracking.
 
 #### 📝 Getting Your Anilist Token (For Private Anulist Profiles)
 - For Quick setup
@@ -217,6 +224,7 @@ These commands fetch and format common available stats for a platform:
 | `codeforces maxrating` | `1698` | Highest achieved rating |
 | `codechef rating` | `1834` | Current CodeChef rating |
 | `codechef maxrating` | `1902` | Peak CodeChef rating |
+| `discord status` | `Online` | Current Discord status |
 | `leetcode rating` | `1654` | Current LeetCode rating |
 | `leetcode rank` | `54231` | Global LeetCode ranking |
 | `github repos` | `42` | Public repository count |

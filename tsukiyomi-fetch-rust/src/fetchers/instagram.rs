@@ -1,3 +1,19 @@
+//! # Instagram Statistics Fetcher
+//!
+//! This module handles fetching user statistics from Instagram by parsing
+//! the web profile information. It retrieves follower and following counts
+//! from publicly available profile data.
+//!
+//! ## Supported Parameters
+//!
+//! - `followers`: Number of followers
+//! - `following`: Number of accounts being followed
+//!
+//! ## Implementation
+//!
+//! Uses Instagram's web profile API endpoint to retrieve basic user statistics.
+//! This approach works for public profiles without requiring authentication.
+
 use crate::{
     cache, config,
     error::{FetchError, Result},

@@ -1,3 +1,17 @@
+//! # LeetCode Statistics Fetcher
+//!
+//! This module handles fetching user statistics from LeetCode using an external API service.
+//! LeetCode is a platform for practicing coding interview questions and algorithmic problems.
+//!
+//! ## Supported Parameters
+//!
+//! - `ranking`: User's global ranking on LeetCode
+//!
+//! ## Implementation
+//!
+//! Uses the leetcode-stats-api.herokuapp.com service to retrieve user statistics
+//! since LeetCode's official API requires authentication and has usage restrictions.
+
 use crate::{
     cache, config,
     error::{FetchError, Result},

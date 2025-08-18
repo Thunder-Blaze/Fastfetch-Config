@@ -1,3 +1,32 @@
+//! # Configuration Management Module
+//!
+//! This module handles persistent configuration storage for Tsukiyomi-Fetch.
+//! It provides functionality to store and retrieve user credentials, API keys,
+//! and platform-specific settings required for fetching statistics.
+//!
+//! ## Features
+//!
+//! - **Persistent storage**: Configuration is saved to `~/.config/fastfetch/tsukiyomi-fetch.conf`
+//! - **Key-value format**: Simple `key=value` format for easy editing and parsing
+//! - **Interactive setup**: Guided configuration process for all supported platforms
+//! - **Secure handling**: Sensitive data like API keys are stored locally
+//! - **Validation**: Input validation during the setup process
+//!
+//! ## Configuration Format
+//!
+//! The configuration file uses a simple key-value format:
+//! ```text
+//! GitHub=username
+//! Codeforces=username
+//! CodeChef=username
+//! # Comments are supported
+//! ```
+//!
+//! ## Supported Platforms
+//!
+//! The configuration system supports setup for all platforms that Tsukiyomi-Fetch
+//! can fetch data from, including usernames, API keys, and other required credentials.
+
 use crate::{
     constants,
     error::{FetchError, Result},
@@ -9,12 +38,28 @@ use std::{
     path::PathBuf,
 };
 
+/// Represents the application configuration with key-value storage.
+///
+/// This struct provides an interface for loading, modifying, and saving
+/// configuration data. It stores all configuration values as strings
+/// in a HashMap for flexible access.
 #[derive(Debug, Clone)]
 pub struct Config {
+    /// Internal storage for configuration key-value pairs
     values: HashMap<String, String>,
 }
 
 impl Config {
+    /// Loads configuration from the config file.
+    ///
+    /// If the config file doesn't exist, returns an empty configuration.
+    /// The file is parsed line by line, expecting `key=value` format.
+    /// Lines that don't match this format are silently ignored.
+    ///
+    /// # Returns
+    ///
+    /// `Ok(Config)` with loaded configuration, or `Err(FetchError)` if
+    /// the file exists but cannot be read.
     pub fn load() -> Result<Self> {
         let path = config_path()?;
         let mut values = HashMap::new();
@@ -33,14 +78,38 @@ impl Config {
         Ok(Self { values })
     }
 
+    /// Retrieves a configuration value by key.
+    ///
+    /// # Arguments
+    ///
+    /// * `key` - The configuration key to look up
+    ///
+    /// # Returns
+    ///
+    /// `Some(&String)` if the key exists, `None` otherwise
     pub fn get(&self, key: &str) -> Option<&String> {
         self.values.get(key)
     }
 
+    /// Sets a configuration value.
+    ///
+    /// # Arguments
+    ///
+    /// * `key` - The configuration key to set
+    /// * `value` - The value to associate with the key
     pub fn set(&mut self, key: String, value: String) {
         self.values.insert(key, value);
     }
 
+    /// Saves the current configuration to the config file.
+    ///
+    /// This method creates the configuration directory if it doesn't exist,
+    /// then writes all key-value pairs to the config file in `key=value` format.
+    ///
+    /// # Returns
+    ///
+    /// `Ok(())` if the configuration was saved successfully,
+    /// `Err(FetchError)` if directory creation or file writing fails.
     pub fn save(&self) -> Result<()> {
         let path = config_path()?;
         let dir = path

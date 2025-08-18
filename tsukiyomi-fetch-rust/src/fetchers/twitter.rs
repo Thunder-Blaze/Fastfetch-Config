@@ -1,3 +1,22 @@
+//! # Twitter Statistics Fetcher
+//!
+//! This module handles fetching user statistics from Twitter using the Twitter API v2.
+//! It retrieves follower counts and other public metrics from user profiles.
+//!
+//! ## Supported Parameters
+//!
+//! - `followers`: Number of followers
+//!
+//! ## Configuration
+//!
+//! Requires a Twitter API Bearer token to be configured due to Twitter's
+//! API access restrictions. The token can be obtained from the Twitter Developer Portal.
+//!
+//! ## Implementation
+//!
+//! Uses Twitter API v2 endpoints with bearer token authentication to retrieve
+//! user metrics and public profile information.
+
 use crate::{
     cache, config,
     error::{FetchError, Result},

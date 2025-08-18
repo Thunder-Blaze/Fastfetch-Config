@@ -1,3 +1,32 @@
+//! # Wrapper Mode for System Integration
+//!
+//! This module implements the wrapper mode functionality that allows Tsukiyomi-Fetch
+//! to integrate seamlessly with system information tools like fastfetch, neofetch,
+//! and other system fetch utilities.
+//!
+//! ## Features
+//!
+//! - **Formatted output**: Produces output specifically designed for system fetch tools
+//! - **Color customization**: Supports ANSI color codes for text styling
+//! - **Icon support**: Configurable Unicode icons for each platform
+//! - **Error tolerance**: Gracefully handles API failures without breaking the output
+//! - **Platform filtering**: Only displays platforms with valid configuration
+//!
+//! ## Usage
+//!
+//! The wrapper mode is activated when Tsukiyomi-Fetch is called with specific arguments:
+//! - `--color <color>`: Sets the text color (black, red, green, yellow, blue, magenta, cyan, white)
+//! - `--icon <icon>`: Overrides default platform icons
+//!
+//! ## Output Format
+//!
+//! The wrapper mode produces output in the format:
+//! ```text
+//! \033[<color>m<icon> <platform>: <value>\033[0m
+//! ```
+//!
+//! This format is specifically designed to integrate with system information displays.
+
 use std::collections::HashMap;
 
 use crate::fetchers::{
@@ -9,12 +38,31 @@ use crate::{
     error::{FetchError, Result},
 };
 
-// Helper function to safely fetch values, returning empty string on any error
+/// Helper function to safely fetch values, returning None on any error
+/// 
+/// This function converts any `Result<T>` to `Option<T>`, suppressing errors
+/// to ensure the wrapper mode continues working even if some platforms fail.
+/// 
+/// # Arguments
+/// * `result` - Any Result type from fetch operations
+/// 
+/// # Returns
+/// * `Some(T)` if the result was successful
+/// * `None` if there was any error
 fn safe_fetch<T>(result: crate::error::Result<T>) -> Option<T> {
     result.ok()
 }
 
 /// Parse color name to ANSI color code
+/// 
+/// Converts human-readable color names to ANSI escape sequence color codes
+/// for terminal text coloring. Defaults to cyan for unknown colors.
+/// 
+/// # Arguments
+/// * `color` - Color name string (case-insensitive)
+/// 
+/// # Returns
+/// ANSI color code as a string
 fn parse_color_code(color: &str) -> &str {
     match color.to_lowercase().as_str() {
         "black" => "30",
@@ -29,7 +77,18 @@ fn parse_color_code(color: &str) -> &str {
     }
 }
 
-/// Extract --color and --icon values from args
+/// Extract --color and --icon values from command line arguments
+/// 
+/// Parses the command line arguments to extract color and icon customizations
+/// for the wrapper mode output formatting.
+/// 
+/// # Arguments
+/// * `args` - Command line arguments as a slice of strings
+/// 
+/// # Returns
+/// A tuple containing:
+/// * `String` - ANSI color code for text coloring
+/// * `Vec<String>` - List of custom icons to use
 fn parse_args(args: &[String]) -> (String, Vec<String>) {
     let mut color = String::from("36"); // default to cyan
     let mut icons = Vec::new();
@@ -57,6 +116,27 @@ fn parse_args(args: &[String]) -> (String, Vec<String>) {
     (color, icons)
 }
 
+/// Runs the wrapper mode for a specified platform, producing formatted output for system fetch tools.
+///
+/// This function fetches platform-specific data, applies color and icon customizations based on
+/// command-line arguments, and formats the output for integration with system information utilities
+/// like fastfetch and neofetch. It gracefully handles API failures by returning an empty string
+/// if any required data cannot be fetched.
+///
+/// # Arguments
+/// * `platform` - The name of the platform to fetch data for (e.g., "github", "reddit").
+/// * `args` - A slice of command-line arguments for customizing color and icons.
+///
+/// # Returns
+/// * `Ok(String)` - Formatted output string for the specified platform, or an empty string if data is unavailable.
+/// * `Err(FetchError)` - If the platform is not recognized.
+///
+/// # Example
+/// ```
+/// let args = vec!["--color".to_string(), "blue".to_string(), "--icon".to_string(), "🐙".to_string()];
+/// let output = run_wrapper("github", &args)?;
+/// println!("{}", output);
+/// ```
 pub fn run_wrapper(platform: &str, args: &[String]) -> Result<String> {
     let (color_code, icons) = parse_args(args);
     let platform_defaults = constants::get_platform_icons(platform);
