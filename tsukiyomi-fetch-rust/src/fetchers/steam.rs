@@ -1,3 +1,23 @@
+//! # Steam Statistics Fetcher
+//!
+//! This module handles fetching user game library and playtime statistics from Steam.
+//! It uses the official Steam Web API to retrieve information about owned games
+//! and total playtime across the user's library.
+//!
+//! ## Supported Parameters
+//!
+//! - `games`: Total number of games owned
+//! - `playtime`: Total playtime across all games (in hours)
+//!
+//! ## Configuration
+//!
+//! Requires both a Steam API key and Steam ID to be configured.
+//! The Steam API key can be obtained from `https://steamcommunity.com/dev/apikey`
+//!
+//! ## API Endpoint
+//!
+//! Uses Steam's IPlayerService API: `/IPlayerService/GetOwnedGames/v0001/`
+
 use crate::{
     cache, config,
     error::{FetchError, Result},

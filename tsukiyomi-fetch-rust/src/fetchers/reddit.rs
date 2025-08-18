@@ -1,3 +1,19 @@
+//! # Reddit Statistics Fetcher
+//!
+//! This module handles fetching user statistics from Reddit using the public API.
+//! It retrieves karma information and account details from user profiles.
+//!
+//! ## Supported Parameters
+//!
+//! - `post_karma`: Karma points from posts
+//! - `comment_karma`: Karma points from comments
+//! - `total_karma`: Combined post and comment karma
+//!
+//! ## Implementation
+//!
+//! Uses Reddit's public JSON API which doesn't require authentication
+//! for basic user profile information.
+
 use crate::{
     cache, config,
     error::{FetchError, Result},

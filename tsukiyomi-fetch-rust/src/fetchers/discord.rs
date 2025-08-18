@@ -1,3 +1,22 @@
+//! # Discord Status Fetcher
+//!
+//! This module handles fetching Discord user presence and activity information.
+//! It connects to a custom Discord bot service to retrieve real-time user status,
+//! activities, and presence information.
+//!
+//! ## Supported Parameters
+//!
+//! - `status`: Current online status (online, idle, dnd, offline)
+//! - `activity`: Current activity or game being played
+//! - `listening`: Current music/media being listened to
+//! - `watching`: Current media being watched
+//! - `custom`: Custom status message
+//!
+//! ## Implementation
+//!
+//! Uses a custom Discord bot service hosted at tsukiyomi-bot.onrender.com
+//! to retrieve presence information via Discord's gateway API.
+
 use crate::{
     config,
     error::{FetchError, Result},

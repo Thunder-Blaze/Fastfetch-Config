@@ -1,3 +1,21 @@
+//! # CodeChef Statistics Fetcher
+//!
+//! This module handles fetching user statistics from CodeChef by parsing HTML content.
+//! CodeChef is a competitive programming platform similar to Codeforces.
+//! Since CodeChef doesn't provide a public API, this module uses web scraping
+//! with regex patterns to extract rating information from user profile pages.
+//!
+//! ## Supported Parameters
+//!
+//! - `rating`: Current contest rating
+//! - `maxrating`: Maximum rating ever achieved
+//!
+//! ## Implementation
+//!
+//! Uses HTML parsing with regex to extract rating information from the user's
+//! profile page. This approach is more fragile than API-based solutions but
+//! necessary due to the lack of a public API.
+
 use crate::{
     cache, config,
     error::{FetchError, Result},
@@ -5,7 +23,13 @@ use crate::{
 };
 use regex::Regex;
 
-/// Extract rating and max rating from CodeChef HTML.
+/// Extract rating and max rating from CodeChef HTML content using regex patterns
+/// 
+/// # Arguments
+/// * `html` - HTML content from the CodeChef user profile page
+/// 
+/// # Returns
+/// A tuple containing (current_rating, max_rating) as `Option<String>`
 fn extract_ratings(html: &str) -> Result<(Option<String>, Option<String>)> {
     let rating_re = Regex::new(r#"<div class="rating-number">(\d+)"#)
         .map_err(|e| FetchError::parse(&format!("Regex error: {}", e)))?;
