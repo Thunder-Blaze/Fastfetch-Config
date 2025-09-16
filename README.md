@@ -111,7 +111,7 @@ Note - `Curl` and `jq` are required for older bash scripts, but the Rust impleme
 
 ```bash
 # Clone and install in one go
-git clone https://github.com/Thunder-Blaze/Tsukiyomi-Fetch /tmp/fastfetch
+git clone https://github.com/Thunder-Blaze/Tsukiyomi-Fetch /tmp/fastfetch --depth 1
 cd /tmp/fastfetch
 chmod +x ./installer.sh
 ./installer.sh
@@ -121,7 +121,7 @@ chmod +x ./installer.sh
 
 ```bash
 # Clone the repository
-git clone https://github.com/Thunder-Blaze/Tsukiyomi-Fetch /tmp/Tsukiyomi-Fetch
+git clone https://github.com/Thunder-Blaze/Tsukiyomi-Fetch /tmp/Tsukiyomi-Fetch --depth 1
 
 # Copy configuration files
 cp -r /tmp/Tsukiyomi-Fetch/fastfetch/* ~/.config/fastfetch/
@@ -354,7 +354,7 @@ Add the following to your `~/.config/fastfetch/config.jsonc`:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Thunder-Blaze/Tsukiyomi-Fetch
+git clone https://github.com/Thunder-Blaze/Tsukiyomi-Fetch --depth 1
 cd Tsukiyomi-Fetch/tsukiyomi-fetch-rust
 
 # Build the Rust binary
