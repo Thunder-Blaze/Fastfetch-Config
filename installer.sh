@@ -20,7 +20,7 @@ cp -r ./fastfetch/* "$FASTFETCH_DIR/"
 read -p "Do you want to download additional anime fastfetch images? (y/N): " choice
 if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
     echo "Downloading additional anime fastfetch images..."
-    git clone https://github.com/thunder-blaze/FastfetchPngs.git /tmp/FastfetchPngs
+    git clone https://github.com/thunder-blaze/FastfetchPngs.git /tmp/FastfetchPngs --depth 1
     mkdir -p "$FASTFETCH_DIR/pngs"
     cp -rf /tmp/FastfetchPngs/* "$FASTFETCH_DIR/pngs/"
 fi
